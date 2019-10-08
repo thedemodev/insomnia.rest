@@ -121,6 +121,11 @@ export function subscribe(tokenId, planId, quantity, memo) {
   });
 }
 
+export function setSessionId (sessionId) {
+  // Store the information for later
+  localStorage.setItem('currentSessionId', sessionId);
+}
+
 export function getCurrentSessionId() {
   return localStorage.getItem('currentSessionId') || '';
 }
@@ -433,11 +438,3 @@ function _sanitizeEmail(email) {
 function _sanitizePassphrase(passphrase) {
   return unorm.nfkd(passphrase.trim());
 }
-
-function _setSessionId (sessionId) {
-  // Store the information for later
-  localStorage.setItem('currentSessionId', sessionId);
-}
-
-// So we can set it more easily
-window.setSessionId = _setSessionId;
