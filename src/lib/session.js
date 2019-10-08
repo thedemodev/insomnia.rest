@@ -109,7 +109,7 @@ export async function login(rawEmail, rawPassphrase, authSecret = null) {
   const sessionId = c.computeK().toString('hex');
 
   // Store the information for later
-  localStorage.setItem('currentSessionId', sessionId);
+  setSessionId(sessionId);
 }
 
 export function subscribe(tokenId, planId, quantity, memo) {
@@ -433,3 +433,11 @@ function _sanitizeEmail(email) {
 function _sanitizePassphrase(passphrase) {
   return unorm.nfkd(passphrase.trim());
 }
+
+function _setSessionId (sessionId) {
+  // Store the information for later
+  localStorage.setItem('currentSessionId', sessionId);
+}
+
+// So we can set it more easily
+window.setSessionId = _setSessionId;
