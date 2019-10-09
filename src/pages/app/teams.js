@@ -62,8 +62,7 @@ class Teams extends React.Component {
     }
 
     let inner = null;
-    const isOnPayingTeam = billingDetails && billingDetails.planId.includes('team');
-    if (!whoami.isTrialing && !isOnPayingTeam) {
+    if (!whoami.isTrialing && !whoami.canManageTeams) {
       inner = (
         <div>
           <p>Manage who is on your team.</p>
