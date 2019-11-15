@@ -125,7 +125,7 @@ account dashboard and not via email requests, for security reasons.
 If we decide to change our privacy policy, we will post those changes on this page. Summary of changes so far:
 
 **Nov 15, 2019**<br>
-Original version
+Update data processors
 
 **May 22, 2018**<br>
 Original version
