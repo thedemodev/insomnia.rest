@@ -60,11 +60,11 @@ infrastructure services.
 
 | Sub-processor   | Purpose                                 |
 | --------------- | --------------------------------------- |
-| Heroku          | Cloud infrastructure hosting            |
-| Papertrail      | Server log management                   |
+| Google Cloud    | Cloud infrastructure hosting            |
 | Mailgun         | Transactional email service             |
 | Sendwithus      | Email template management and sending   |
 | Stripe          | Credit card payment processing          |
+| Baremetrics     | Stripe analytics                        |
 | Help Scout      | Email support and documentation hosting |
 
 ## Your Responsibilities for Protecting Your Data
@@ -123,6 +123,9 @@ account dashboard and not via email requests, for security reasons.
 ## Changes
 
 If we decide to change our privacy policy, we will post those changes on this page. Summary of changes so far:
+
+**Nov 15, 2019**<br>
+Update data processors
 
 **May 22, 2018**<br>
 Original version
