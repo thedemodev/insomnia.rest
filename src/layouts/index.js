@@ -47,11 +47,6 @@ export default class extends React.Component {
           <meta name="description" content={site && site.description}/>
           <body data-pathname={location.pathname}/>
         </Helmet>
-        <Announcement storageKey="insomnia-kong">
-          Insomnia is now part of Kong!
-          {' '}
-          <a href="/blog/insomnia-and-kong" className="button button--super-compact">Read more</a>
-        </Announcement>
         <Navbar loggedIn={isLoggedIn}/>
         <main role="main">
           {children()}
