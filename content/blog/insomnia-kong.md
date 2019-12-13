@@ -35,7 +35,7 @@ open source and Aghi (Kong's CEO) has supported Insomnia since the very beginnin
 
 With the help of Kong, we'll be able to take Insomnia even further and tackle some of the 
 larger problems that the community has been discussing for a while. I'm so proud of how far
-Insomnia has become and can't wait to see where it goes from here.
+Insomnia has come and can't wait to see where it goes from here.
 
 This is a lot to take in, and you probably have some questions, so here you go:
 

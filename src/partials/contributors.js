@@ -16,15 +16,15 @@ class Contributors extends React.Component {
     const {contributors} = this.state;
     return (
       <section className="dark github-contributors">
+        <Waypoint
+          onEnter={this.load.bind(this)}
+        />
         <div>
           Thanks to all {contributors.length} <Link to="https://github.com/Kong/insomnia/graphs/contributors">contributors</Link>
           {' '}
           🎉👏
         </div>
         <div className="github-contributors__users">
-          <Waypoint
-            onEnter={this.load.bind(this)}
-          />
           {contributors.map(c => (
             <Link key={c.login}
                to={`https://github.com/${c.login}`}
