@@ -17,7 +17,7 @@ class Contributors extends React.Component {
     return (
       <section className="dark github-contributors">
         <div>
-          Thanks to all {contributors.length} <Link to="https://github.com/getinsomnia/insomnia/graphs/contributors">contributors</Link>
+          Thanks to all {contributors.length} <Link to="https://github.com/Kong/insomnia/graphs/contributors">contributors</Link>
           {' '}
           🎉👏
         </div>

@@ -45,7 +45,7 @@ export const menus = {
     }, {
       name: 'GitHub',
       key: 'github',
-      url: 'https://github.com/getinsomnia/insomnia'
+      url: 'https://github.com/Kong/insomnia'
     }, {
       name: 'Twitter',
       key: 'twitter',

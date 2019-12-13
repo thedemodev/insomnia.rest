@@ -7,12 +7,12 @@ tags: ["announcement"]
 
 Today, I'm happy to announce that the Insomnia desktop app is now open source software 
 under the MIT license! The source code is hosted on 
-[GitHub](https://github.com/getinsomnia/insomnia) for your viewing pleasure.
+[GitHub](https://github.com/Kong/insomnia) for your viewing pleasure.
 
 <!--more-->
 
 <p style="text-align:center;padding-bottom:1em;">
-<a class="button" href="https://github.com/getinsomnia/insomnia">Insomnia on GitHub</a>
+<a class="button" href="https://github.com/Kong/insomnia">Insomnia on GitHub</a>
 </p>
 
 ## Journey to Open Source

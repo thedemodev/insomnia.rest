@@ -9,7 +9,7 @@ __*All colorschemes are now free as of Insomnia 6.0*__ &#128079;
 
 It's now been over two years since I left my _real job_ to work on Insomnia full-time 🙌. Today, Insomnia 
 remains a single-person company – just as it began – but app development is now assisted by a growing community 
-of [30+ open-source contributors](https://github.com/getinsomnia/insomnia/graphs/contributors). 
+of [30+ open-source contributors](https://github.com/Kong/insomnia/graphs/contributors). 
 I'm still amazed at the overwhelming positivity and support I see almost every day! 💕
 
 As shown on the [Transparency Page](/open), growth isn't slowing down. Annual recurring revenue 

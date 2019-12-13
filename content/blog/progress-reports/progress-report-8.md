@@ -38,7 +38,7 @@ This also lead to a significant bump in paid customers.
 ## Wrap Up
 
 It's been a few weeks since Insomnia went open source and it's been a wild ride so far!
-The [GitHub repo](https://github.com/getinsomnia/insomnia) is now at **3,900 stars and 
+The [GitHub repo](https://github.com/Kong/insomnia) is now at **3,900 stars and 
 127 forks**, and there are over **60 members in the [Slack Group](https://chat.insomnia.rest/)**.
 
 The open source announcement also amassed a tonne of unexpected positivity from users.

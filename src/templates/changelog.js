@@ -42,7 +42,7 @@ export default class BlogTemplate extends React.Component {
                 <p className="center">
                   <DownloadButton/>
                   {' '}
-                  <Link to={`https://github.com/getinsomnia/insomnia/releases/v${frontmatter.slug}`}
+                  <Link to={`https://github.com/Kong/insomnia/releases/v${frontmatter.slug}`}
                         className="button button--no-outline"
                         target="_blank">
                     View on GitHub

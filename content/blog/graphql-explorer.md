@@ -43,4 +43,4 @@ There are three ways to show the documentation pane.
 ## Moving Forward
 
 This feature is by no means complete. If you have any suggestions, comments, or bug reports, 
-please open an issue on the [Insomnia GitHub Repo](https://github.com/getinsomnia/insomnia).
+please open an issue on the [Insomnia GitHub Repo](https://github.com/Kong/insomnia).

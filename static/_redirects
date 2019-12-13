@@ -19,8 +19,8 @@
 /workspaces.html                                                 /documentation/workspaces/
 /index.xml                                                       /blog/index.xml
 /contact/                                                        /support/
-/eula/                                                           https://github.com/getinsomnia/insomnia/blob/master/LICENSE
-/license/                                                        https://github.com/getinsomnia/insomnia/blob/master/LICENSE
+/eula/                                                           https://github.com/Kong/insomnia/blob/master/LICENSE
+/license/                                                        https://github.com/Kong/insomnia/blob/master/LICENSE
 /app/                                                            /app/account/
 /transparency/                                                   /open/
 

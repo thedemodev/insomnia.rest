@@ -13,7 +13,7 @@ View full help articles at [support.insomnia.rest](https://support.insomnia.rest
 
 General application bugs and issues should be submitted to the
 GitHub Repository. Please see the 
-[Contributing Guidelines](https://github.com/getinsomnia/insomnia/blob/develop/CONTRIBUTING.md)
+[Contributing Guidelines](https://github.com/Kong/insomnia/blob/develop/CONTRIBUTING.md)
 to get started.
 
 ## Slack Group
@@ -29,6 +29,6 @@ Any other feedback, questions, concerns can be sent to
 <p class="notice info">
 Please avoid sending bug reports or feature requests via email. It benefits everyone if these
 are submitted to the 
-<a href="https://github.com/getinsomnia/insomnia/blob/develop/CONTRIBUTING.md">GitHub Repository</a>
+<a href="https://github.com/Kong/insomnia/blob/develop/CONTRIBUTING.md">GitHub Repository</a>
 instead.
 </p>
