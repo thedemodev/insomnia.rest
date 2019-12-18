@@ -340,6 +340,10 @@ export async function inviteToTeam(teamId, emailToInvite, rawPassphrase) {
   }
 }
 
+export async function createTeam() {
+  return util.post(`/api/teams`);
+}
+
 export async function leaveTeam(teamId) {
   // Do legacy stuff first because the error handling is better
   await util.del(`/api/teams/${teamId}/leave`);

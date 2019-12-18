@@ -1,5 +1,5 @@
 import React from 'react';
-import {parse as urlParse} from 'url';
+import { parse as urlParse } from 'url';
 import PropTypes from 'prop-types';
 import LeaveTeamLink from '../../lib/teams/leave-link';
 import RemoveTeamAccountLink from '../../lib/teams/remove-account-link';
@@ -7,26 +7,40 @@ import UpdateTeamNameForm from '../../lib/teams/update-name-form';
 import AddAccountToTeamForm from '../../lib/teams/add-account-form';
 import App from '../../lib/app-wrapper';
 import Link from '../../components/link';
+import * as session from '../../lib/session';
 
 class Teams extends React.Component {
   state = {
     error: '',
-    activeTeam: null
+    activeTeam: null,
+    loadingCreateTeam: false,
   };
 
-  componentDidMount () {
+  componentDidMount() {
     this._checkUrl();
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this._checkUrl();
   }
 
-  _checkUrl () {
-    const {teams} = this.props;
-    const {activeTeam} = this.state;
+  async _createTeam() {
+    this.setState({ loadingCreateTeam: true });
+    try {
+      await session.createTeam();
+      this.props.handleReload();
+    } catch (err) {
+      // Nothing yet
+    }
 
-    const {query} = urlParse(window.location.href, true);
+    this.setState({ loadingCreateTeam: false });
+  }
+
+  _checkUrl() {
+    const { teams } = this.props;
+    const { activeTeam } = this.state;
+
+    const { query } = urlParse(window.location.href, true);
     const teamId = query.id || null;
     const activeTeamId = activeTeam ? activeTeam.id : null;
 
@@ -35,7 +49,7 @@ class Teams extends React.Component {
     }
 
     if (!teamId) {
-      this.setState({activeTeam: null});
+      this.setState({ activeTeam: null });
       return;
     }
 
@@ -47,11 +61,11 @@ class Teams extends React.Component {
       return;
     }
 
-    this.setState({activeTeam: team});
+    this.setState({ activeTeam: team });
   }
 
-  renderEditTeam (activeTeam) {
-    const {whoami, billingDetails} = this.props;
+  renderEditTeam(activeTeam) {
+    const { whoami, billingDetails } = this.props;
 
     let membersRemaining = 0;
 
@@ -68,7 +82,7 @@ class Teams extends React.Component {
           <p>Manage who is on your team.</p>
           <p className="notice info">
             <strong>Upgrade to Teams</strong> to manage your own team
-            <br/><br/>
+            <br /><br />
             <Link to="/app/subscribe/#teams" className="button button--compact">
               Upgrade to Teams
             </Link>
@@ -76,7 +90,7 @@ class Teams extends React.Component {
         </div>
       );
     } else if (activeTeam) {
-      const {handleReload} = this.props;
+      const { handleReload } = this.props;
 
       // Sort the accounts to put the user first. NOTE: We're making a copy since
       // sort modifies the original.
@@ -143,8 +157,8 @@ class Teams extends React.Component {
     );
   }
 
-  renderTeamActionLink (team) {
-    const {whoami} = this.props;
+  renderTeamActionLink(team) {
+    const { whoami } = this.props;
 
     const isAdmin = team.accounts.find(a => a.isAdmin && a.id === whoami.accountId);
 
@@ -159,7 +173,7 @@ class Teams extends React.Component {
       );
     }
 
-    const {activeTeam} = this.state;
+    const { activeTeam } = this.state;
     const activeTeamId = activeTeam ? activeTeam.id : null;
 
     if (activeTeamId !== team.id) {
@@ -175,8 +189,9 @@ class Teams extends React.Component {
     );
   }
 
-  renderTeams () {
-    const {teams} = this.props;
+  renderTeams() {
+    const { teams, whoami } = this.props;
+    const { loadingCreateTeam } = this.state;
 
     return (
       <div>
@@ -184,6 +199,7 @@ class Teams extends React.Component {
         <p>
           These are the teams you are on.
         </p>
+
         {teams.length ? (
           <ul>
             {teams.map(team => (
@@ -199,18 +215,24 @@ class Teams extends React.Component {
             You are not on any teams yet.
           </p>
         )}
+
+        {whoami.canManageTeams && teams.length === 0 && (
+          <button className="button" onClick={this._createTeam.bind(this)}>
+            {loadingCreateTeam ? 'Creating...' : 'Create Team'}
+          </button>
+        )}
       </div>
     );
   }
 
-  render () {
-    const {activeTeam} = this.state;
+  render() {
+    const { activeTeam } = this.state;
     return (
       <div>
         {activeTeam && (
           <React.Fragment>
             {this.renderEditTeam(activeTeam)}
-            <hr/>
+            <hr />
           </React.Fragment>
         )}
         {this.renderTeams()}
@@ -228,7 +250,7 @@ Teams.propTypes = {
     email: PropTypes.string.isRequired,
     canManageTeams: PropTypes.bool.isRequired,
     quantityOverride: PropTypes.number,
-    maxTeamMembers: PropTypes.number.isRequired
+    maxTeamMembers: PropTypes.number.isRequired,
   }).isRequired,
   teams: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -237,13 +259,13 @@ Teams.propTypes = {
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired
-    })).isRequired
-  })).isRequired
+      id: PropTypes.string.isRequired,
+    })).isRequired,
+  })).isRequired,
 };
 
 export default (pageProps) => (
   <App title="Manage Teams" subTitle="Collaborate within Insomnia">
-    {props => <Teams {...props} {...pageProps}/>}
+    {props => <Teams {...props} {...pageProps} />}
   </App>
 );

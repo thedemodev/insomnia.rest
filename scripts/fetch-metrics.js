@@ -23,35 +23,11 @@ function endDate() {
     const contributors = await fetchContributors();
     const contributorsBody = JSON.stringify(contributors, null, '\t');
     fs.writeFileSync(path.join(dirAssets, 'contributors.json'), contributorsBody);
-
-    // Fetch repo stats
-    const repoStats = await fetchRepositoryStats();
-    const repoStatsBody = JSON.stringify(repoStats, null, '\t');
-    fs.writeFileSync(path.join(dirAssets, 'repository.json'), repoStatsBody);
     console.log('Wrote metrics to ' + dirAssets);
   } catch (err) {
     console.log('Failed to fetch metrics:', err.message);
   }
 })();
-
-function fetchPlans() {
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: 'GET',
-      url: 'https://api.baremetrics.com/v1/metrics/mrr/plans',
-      qs: { start_date: '2018-04-28', end_date: '2018-04-29' },
-      headers: { 'Authorization': `Bearer ${process.env.BAREMETRICS_KEY}` }
-    };
-
-    request(options, function(err, response, body) {
-      if (response.statusCode !== 200) {
-        return reject(new Error('Plans request failed: ' + response.body));
-      }
-
-      resolve(JSON.parse(body));
-    });
-  });
-}
 
 async function fetchContributors() {
   return new Promise((resolve, reject) => {
@@ -84,24 +60,6 @@ async function fetchContributors() {
     }
 
     next();
-  });
-}
-
-function fetchRepositoryStats() {
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: 'GET',
-      url: 'https://gschier:@api.github.com/repos/getinsomnia/insomnia',
-      headers: { 'User-Agent': `insomnia/website` }
-    };
-
-    request(options, function(err, response, body) {
-      if (response.statusCode !== 200) {
-        return reject(new Error('Repository stats request failed: ' + response.body));
-      }
-
-      resolve(JSON.parse(body));
-    });
   });
 }
 
