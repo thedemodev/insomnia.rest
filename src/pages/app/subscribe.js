@@ -295,10 +295,6 @@ class Subscribe extends React.Component {
 
     const {billingDetails} = this.props;
 
-    if (billingDetails && !billingDetails.isBillingAdmin) {
-      return this.renderBillingNotice();
-    }
-
     let subscribeBtn = null;
     if (loading && billingDetails) {
       subscribeBtn = (
