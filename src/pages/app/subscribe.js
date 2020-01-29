@@ -264,14 +264,6 @@ class Subscribe extends React.Component {
     const trialEndMillis = trialEndDate.getTime() - Date.now();
     const trialDays = Math.ceil(trialEndMillis / 1000 / 60 / 60 / 24);
 
-    if (billingDetails && !billingDetails.isBillingAdmin) {
-      return (
-        <p className="notice warn">
-          Since you are part of a paying team, you don't need to pay
-        </p>
-      );
-    }
-
     if (!billingDetails && trialDays > 0) {
       return (
         <p className="notice info">
