@@ -510,6 +510,7 @@ button[disabled],
   opacity: 0.5;
 }
 
+.button.primary,
 .button:not([disabled]):focus,
 .button:not([disabled]):hover {
   background-color: #675BC0;
@@ -520,6 +521,7 @@ button[disabled],
   background-color: #ff3136;
 }
 
+.button.primary,
 .button:not([disabled]):focus,
 .button:not([disabled]):focus *,
 .button:not([disabled]):hover,
@@ -1157,6 +1159,19 @@ body[data-pathname^='/blog'] {
 }
 
 body[data-pathname^='/blog'] article > header {
+  margin-top: 2rem;
+}
+
+body[data-pathname^='/plugins'] article > header {
+  margin-bottom: 1rem;
+}
+
+body[data-pathname^='/plugins'] article .content img {
+  display: initial;
+  margin: initial;
+}
+
+body[data-pathname^='/plugins'] article > header .col-12 {
   margin-top: 2rem;
 }
 

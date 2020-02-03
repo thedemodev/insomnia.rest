@@ -14,6 +14,14 @@ module.exports.onCreateNode = ({node, boundActionCreators}) => {
       value: frontmatter.slug,
     });
   }
+
+  if (node.internal.type === 'NPMPackage') {
+    createNodeField({
+      node,
+      name: 'name',
+      value: node.name,
+    });
+  }
 };
 
 module.exports.createPages = async function (data) {
@@ -158,4 +166,28 @@ module.exports.createPages = async function (data) {
       },
     });
   }
+  
+  const template = path.resolve('./src/templates/plugin.js');
+  const results = await graphql(`
+    query myQuery {
+      allNpmPackage {
+        edges {
+          node {
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  // Process data into pages.
+  results.data.allNpmPackage.edges.forEach(({ node: pkg }) => {
+    createPage({
+      path: `/plugins/${pkg.name}`,
+      component: template,
+      context: {
+        slug: pkg.name || ''
+      },
+    })
+  })
 };
