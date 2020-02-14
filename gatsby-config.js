@@ -17,6 +17,13 @@ module.exports = {
     'gatsby-plugin-react-next',
     'gatsby-plugin-react-helmet',
     {
+      resolve: 'gatsby-source-npm-plugin',
+      options: {
+        query: 'insomnia',
+        filter: 'insomnia-plugin-'
+      }
+    },
+    {
       resolve: 'gatsby-plugin-less',
       options: {
         theme: {
