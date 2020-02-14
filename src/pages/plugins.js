@@ -15,7 +15,7 @@ function Header(onSearch) {
         </div>
       </div>
       <div className="row">
-        <div class="col-12">
+        <div className="col-12">
           <input
             className="plugin-search br-3 text-lg d-block w-100 pr-3 pl-3 pt-2 pb-2 mb-3"
             placeholder="Search plugins"
@@ -46,12 +46,16 @@ function Loader() {
   );
 }
 
-function NoMoreResults() {
+function NoMoreResults(numResults) {
   return (
     <div style={{ textAlign: 'center' }} className="container mt-5">
       <div className="row">
         <div className="col-12">
-          <h4>No more results. Don't see your plugin? Create one!</h4>
+          <p>
+            {numResults ? 'No more results. Don\'t see your plugin?' : 'No matches found'}
+            <br/>
+            <a href="https://support.insomnia.rest/article/26-plugins">Create a Plugin</a>
+          </p>
         </div>
       </div>
     </div>
@@ -105,8 +109,8 @@ Plugin.getAuthor = pkg => {
     email,
     avatar: {
       github: `https://github.com/${name}`,
-      gravatar: `tbd`
-    }
+      gravatar: `tbd`,
+    },
   };
 };
 
@@ -130,7 +134,7 @@ function Plugins(plugins, hasMore, onNext) {
         hasMore={hasMore}
         hasChildren={plugins.length > 0}
         loader={Loader()}
-        endMessage={NoMoreResults()}>
+        endMessage={NoMoreResults(plugins.length)}>
         {plugins.map(plugin => Plugin(plugin, 'lastYear'))}
       </InfiniteScroll>
     </div>
@@ -149,19 +153,19 @@ export default class Component extends React.Component {
       sortBy: 'downloads',
       trendingBy: 'lastWeek',
       hasMore: true,
-      perScroll: 25
+      perScroll: 25,
     };
   }
 
   componentDidMount() {
     const {
-      allNpmPackage: { edges }
+      allNpmPackage: { edges },
     } = this.props.data;
 
     this.plugins = edges.map(({ node: plugin }) => plugin);
     this.setState({
       total: this.plugins.length,
-      hasMore: this.plugins.length > 0
+      hasMore: this.plugins.length > 0,
     });
     this.load();
   }
@@ -170,7 +174,7 @@ export default class Component extends React.Component {
     this.setState({
       plugins: [],
       offset: 0,
-      hasMore: false
+      hasMore: false,
     });
 
     setTimeout(() => {
@@ -191,7 +195,7 @@ export default class Component extends React.Component {
       hasMore: false,
       plugins: this.plugins.filter(plugin => {
         return Plugin.getDisplayName(plugin).indexOf(query) > -1;
-      })
+      }),
     });
   }
 
@@ -224,7 +228,7 @@ export default class Component extends React.Component {
     let nextSet = this.plugins.slice(offset, nextOffset);
 
     this.setState({
-      loading: true
+      loading: true,
     });
 
     setTimeout(() => {
@@ -232,7 +236,7 @@ export default class Component extends React.Component {
         plugins: plugins.concat(nextSet),
         offset: nextOffset,
         hasMore: this.state.total > nextOffset,
-        loading: false
+        loading: false,
       });
     }, Math.random() * 500);
   }
@@ -249,7 +253,7 @@ export default class Component extends React.Component {
           {Plugins(
             this.state.plugins,
             this.state.hasMore,
-            this.loadMore.bind(this)
+            this.loadMore.bind(this),
           )}
         </div>
       </React.Fragment>
@@ -289,3 +293,4 @@ export const pageQuery = graphql`
     }
   }
 `;
+

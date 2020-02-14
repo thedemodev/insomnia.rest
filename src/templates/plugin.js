@@ -27,7 +27,7 @@ function Header(plugin) {
         <div className="col-12">
           <a
             href={`insomnia://plugins/install?name=${plugin.name}`}
-            class="button primary w-25 mt-3 mb-4 float-right">
+            className="button primary w-25 mt-3 mb-4 float-right">
             Install
           </a>
 
