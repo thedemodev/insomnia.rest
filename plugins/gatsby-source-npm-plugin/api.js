@@ -1,10 +1,5 @@
 const axios = require('axios');
 const marked = require('marked');
-const gurl = {
-  gh: require('parse-github-url'),
-  gl: require('gitlab-url-parse'),
-  g: require('giturl').parse
-};
 
 const INSOMNIA_PKG = `https://raw.githubusercontent.com/Kong/insomnia/develop/packages/insomnia-app/package.json`;
 
@@ -34,32 +29,12 @@ async function getDetail(pkg) {
 
   const currentVersion = npm.data['dist-tags'].latest;
   const currentPkg = npm.data.versions[currentVersion];
-  let gitCdnUrl = null;
-  let githubUsername = null;
-  let gitlabUsername = null;
-
-  // Determine github username / cdn url based off repository url
-  if (npm.data.repository && npm.data.repository.url.indexOf('github') > -1) {
-    const gh = gurl.gh(npm.data.repository.url);
-    gitCdnUrl = `https://raw.githubusercontent.com/${gh.repo}/HEAD/`;
-    githubUsername = gh.owner;
-  }
-
-  // Gitlab requires parsing the git url into web format, then parsing for data
-  if (npm.data.repository && npm.data.repository.url.indexOf('gitlab') > -1) {
-    const gl = gurl.gl(gurl.g(npm.data.repository.url));
-    gitCdnUrl = `https://gitlab.com/${gl.user}/${gl.project}/-/raw/master/`;
-    gitlabUsername = gl.user;
-  }
 
   return {
     name: npm.data.name,
     readme: npm.data.readme,
     released: npm.data.time.created,
     repository: npm.data.repository,
-    gitCdnUrl,
-    githubUsername,
-    gitlabUsername,
     // REMOVE FOR GENERIC PLUGIN
     meta: currentPkg.insomnia || {}
   };
@@ -96,26 +71,9 @@ async function getDetails(pkgs) {
   return results;
 }
 
-function buildMarkdownRenderer(pkgDetails) {
-  const renderer = new marked.Renderer();
-  const originalRendererImage = renderer.image.bind(renderer);
-
-  renderer.image = (href, title, text) => {
-    if (href.indexOf('://') < 0) {
-      href = pkgDetails.gitCdnUrl + href;
-    }
-
-    return originalRendererImage(href, title, text);
-  };
-
-  return renderer;
-}
-
 function buildPkg(pkg, detailsMap, downloads) {
   const details = detailsMap[pkg.name];
-  const readme = marked(details.readme || '', {
-    renderer: buildMarkdownRenderer(details)
-  });
+  const readme = marked(details.readme || '');
   const readmeRaw = details.readme;
   const meta = details.meta;
 
@@ -130,8 +88,6 @@ function buildPkg(pkg, detailsMap, downloads) {
     meta,
     npm: {
       ...pkg,
-      githubUsername: details.githubUsername,
-      gitlabUsername: details.gitlabUsername,
       repository: details.repository,
       released: details.released,
       readme,

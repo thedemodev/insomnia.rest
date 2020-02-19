@@ -110,7 +110,7 @@ function formatNumber(value) {
 }
 
 function getAuthor(plugin) {
-  const githubUsername = plugin.npm.githubUsername;
+  const repository = plugin.npm.links.repository;
   const author = plugin.npm.author ? plugin.npm.author : plugin.npm.publisher;
   const name = author.name || author.username;
   const email = (author.email || '').trim().toLowerCase();
@@ -118,11 +118,15 @@ function getAuthor(plugin) {
     .createHash('md5')
     .update(email)
     .digest('hex');
-  let avatar = `https://gravatar.com/avatar/${emailHash}?d=mp&f=y`;
-  let fallbackAvatar = `https://avatars.dicebear.com/v2/bottts/${emailHash}.svg`;
+  let avatar = `https://avatars.dicebear.com/v2/bottts/${emailHash}.svg`;
+  let fallbackAvatar = avatar;
+  let username;
 
-  if (githubUsername) {
-    avatar = `https://github.com/${githubUsername}.png`;
+  if (repository && repository.indexOf('github.com') > -1) {
+    username = repository.split('github.com/')[1].split('/')[0];
+    avatar = `https://github.com/${username}.png`;
+  } else {
+    avatar = `https://gravatar.com/avatar/${emailHash}?d=mp&f=y`;
   }
 
   return {
@@ -148,8 +152,6 @@ export const pageQuery = graphql`
         description
         version
         date
-        githubUsername
-        gitlabUsername
         author {
           name
         }

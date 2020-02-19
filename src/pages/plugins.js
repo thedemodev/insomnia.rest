@@ -52,13 +52,9 @@ function NoMoreResults(numResults) {
       <div className="row">
         <div className="col-12">
           <p>
-            {numResults
-              ? "No more results. Don't see your plugin?"
-              : 'No matches found'}
-            <br />
-            <a href="https://support.insomnia.rest/article/26-plugins">
-              Create a Plugin
-            </a>
+            {numResults ? 'No more results. Don\'t see your plugin?' : 'No matches found'}
+            <br/>
+            <a href="https://support.insomnia.rest/article/26-plugins">Create a Plugin</a>
           </p>
         </div>
       </div>
@@ -113,8 +109,8 @@ Plugin.getAuthor = pkg => {
     email,
     avatar: {
       github: `https://github.com/${name}`,
-      gravatar: `tbd`
-    }
+      gravatar: `tbd`,
+    },
   };
 };
 
@@ -157,19 +153,19 @@ export default class Component extends React.Component {
       sortBy: 'downloads',
       trendingBy: 'lastWeek',
       hasMore: true,
-      perScroll: 25
+      perScroll: 25,
     };
   }
 
   componentDidMount() {
     const {
-      allNpmPackage: { edges }
+      allNpmPackage: { edges },
     } = this.props.data;
 
     this.plugins = edges.map(({ node: plugin }) => plugin);
     this.setState({
       total: this.plugins.length,
-      hasMore: this.plugins.length > 0
+      hasMore: this.plugins.length > 0,
     });
     this.load();
   }
@@ -178,7 +174,7 @@ export default class Component extends React.Component {
     this.setState({
       plugins: [],
       offset: 0,
-      hasMore: false
+      hasMore: false,
     });
 
     setTimeout(() => {
@@ -187,25 +183,19 @@ export default class Component extends React.Component {
   }
 
   search(evt) {
-    let query = evt.target.value;
+    const query = evt.target.value;
 
     if (!query) {
       this.reset();
       return;
     }
 
-    query = query.toLowerCase();
-
     this.setState({
       offset: 0,
       hasMore: false,
       plugins: this.plugins.filter(plugin => {
-        return (
-          Plugin.getDisplayName(plugin)
-            .toLowerCase()
-            .indexOf(query) > -1
-        );
-      })
+        return Plugin.getDisplayName(plugin).indexOf(query) > -1;
+      }),
     });
   }
 
@@ -238,7 +228,7 @@ export default class Component extends React.Component {
     let nextSet = this.plugins.slice(offset, nextOffset);
 
     this.setState({
-      loading: true
+      loading: true,
     });
 
     setTimeout(() => {
@@ -246,7 +236,7 @@ export default class Component extends React.Component {
         plugins: plugins.concat(nextSet),
         offset: nextOffset,
         hasMore: this.state.total > nextOffset,
-        loading: false
+        loading: false,
       });
     }, Math.random() * 500);
   }
@@ -263,7 +253,7 @@ export default class Component extends React.Component {
           {Plugins(
             this.state.plugins,
             this.state.hasMore,
-            this.loadMore.bind(this)
+            this.loadMore.bind(this),
           )}
         </div>
       </React.Fragment>
@@ -303,3 +293,4 @@ export const pageQuery = graphql`
     }
   }
 `;
+
