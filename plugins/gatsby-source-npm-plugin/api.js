@@ -133,13 +133,17 @@ function buildPkg(pkg, detailsMap, downloads) {
   const readmeRaw = details.readme;
   const meta = details.meta;
 
+  const lastDay = downloads.lastDay[pkg.name];
+  const lastWeek = downloads.lastWeek[pkg.name];
+  const lastMonth = downloads.lastMonth[pkg.name];
+  const lastYear = downloads.lastYear[pkg.name];
   return {
     name: pkg.name,
     downloads: {
-      lastDay: downloads.lastDay[pkg.name].downloads,
-      lastWeek: downloads.lastWeek[pkg.name].downloads,
-      lastMonth: downloads.lastMonth[pkg.name].downloads,
-      lastYear: downloads.lastYear[pkg.name].downloads
+      lastDay: lastDay ? lastDay.downloads : 0,
+      lastWeek: lastWeek ? lastWeek.downloads : 0,
+      lastMonth: lastMonth ? lastMonth.downloads : 0,
+      lastYear: lastYear ? lastYear.downloads : 0
     },
     meta,
     npm: {

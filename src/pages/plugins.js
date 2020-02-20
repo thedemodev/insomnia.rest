@@ -120,9 +120,7 @@ Plugin.getAuthor = pkg => {
 
 Plugin.getDisplayName = pkg => {
   let displayName = pkg.meta.name || pkg.name;
-  return displayName.indexOf('insomnia-plugin') > -1
-    ? displayName.split('insomnia-plugin-')
-    : displayName;
+  return displayName.replace(/^insomnia-plugin-/, '');
 };
 
 Plugin.getDescription = pkg => {

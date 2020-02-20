@@ -83,7 +83,7 @@ Overview.Sidebar = plugin => (
         InfoItem(
           'Site',
           <a href={plugin.npm.links.homepage}>
-            <i class="las la-globe" /> {plugin.npm.links.homepage}
+            <i className="las la-globe" /> {plugin.npm.links.homepage}
           </a>
         )}
 
@@ -91,7 +91,7 @@ Overview.Sidebar = plugin => (
         InfoItem(
           'Git',
           <a href={plugin.npm.git.url}>
-            <i class="lab la-github" /> {getGitDisplay(plugin)}
+            <i className="lab la-github" /> {getGitDisplay(plugin)}
           </a>
         )}
 
@@ -99,7 +99,7 @@ Overview.Sidebar = plugin => (
         InfoItem(
           'Git',
           <a href={plugin.npm.git.url}>
-            <i class="lab la-gitlab" /> {getGitDisplay(plugin)}
+            <i className="lab la-gitlab" /> {getGitDisplay(plugin)}
           </a>
         )}
     </ul>

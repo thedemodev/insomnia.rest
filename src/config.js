@@ -21,11 +21,11 @@ export const menus = {
       name: 'Pricing',
       key: 'pricing',
       url: '/pricing/'
-    // }, {
+    }, {
     //   name: 'Plugins',
     //   key: 'plugins',
     //   url: '/plugins/'
-    }, {
+    // }, {
       name: 'Account',
       key: 'account',
       url: '/app/account/',
