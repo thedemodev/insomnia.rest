@@ -22,10 +22,10 @@ export const menus = {
       key: 'pricing',
       url: '/pricing/'
     }, {
-    //   name: 'Plugins',
-    //   key: 'plugins',
-    //   url: '/plugins/'
-    // }, {
+      name: 'Plugins',
+      key: 'plugins',
+      url: '/plugins/'
+    }, {
       name: 'Account',
       key: 'account',
       url: '/app/account/',
