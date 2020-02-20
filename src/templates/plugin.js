@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import { Tab, Tabs } from 'react-tabify';
 import Title from '../partials/title';
+import SocialCards from '../components/social-cards';
 
 export default ({ data: { npmPackage: plugin } }) => (
   <React.Fragment>
@@ -11,6 +12,7 @@ export default ({ data: { npmPackage: plugin } }) => (
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
     />
     <Title>{plugin.name}</Title>
+    <SocialCards title={plugin.name} summary={`Install "${plugin.name}" in Insomnia`} />
 
     <article className="plugin-page">
       {Header(plugin)}
