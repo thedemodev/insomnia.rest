@@ -6,6 +6,10 @@ import Title from '../partials/title';
 
 export default ({ data: { npmPackage: plugin } }) => (
   <React.Fragment>
+    <link
+      rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+    />
     <Title>{plugin.name}</Title>
 
     <article className="plugin-page">
@@ -66,13 +70,45 @@ Overview.Sidebar = plugin => (
       {InfoItem('Installations', formatNumber(plugin.downloads.lastYear))}
       {InfoItem('Released', moment(plugin.npm.released).format('MM/DD/YYYY'))}
       {InfoItem('Updated', moment(plugin.npm.date).format('MM/DD/YYYY'))}
+
+      {plugin.npm.links &&
+        plugin.npm.links.npm &&
+        InfoItem(
+          'NPM',
+          <a href={plugin.npm.links.npm}>{getNpmDisplay(plugin)}</a>
+        )}
+
+      {plugin.npm.links &&
+        plugin.npm.links.homepage &&
+        InfoItem(
+          'Site',
+          <a href={plugin.npm.links.homepage}>
+            <i class="las la-globe" /> {plugin.npm.links.homepage}
+          </a>
+        )}
+
+      {plugin.npm.git.isGithub &&
+        InfoItem(
+          'Git',
+          <a href={plugin.npm.git.url}>
+            <i class="lab la-github" /> {getGitDisplay(plugin)}
+          </a>
+        )}
+
+      {plugin.npm.git.isGitlab &&
+        InfoItem(
+          'Git',
+          <a href={plugin.npm.git.url}>
+            <i class="lab la-gitlab" /> {getGitDisplay(plugin)}
+          </a>
+        )}
     </ul>
   </aside>
 );
 
 function InfoItem(key, value) {
   return (
-    <li className="pt-2 pb-2">
+    <li className="info-item pt-2 pb-2">
       {key}: <strong className="float-right">{value}</strong>
     </li>
   );
@@ -109,8 +145,21 @@ function formatNumber(value) {
   return value.toLocaleString('en-US');
 }
 
+function getNpmDisplay(plugin) {
+  return decodeURIComponent(plugin.npm.links.npm.split('/package/')[1]);
+}
+
+function getGitDisplay(plugin) {
+  const git = plugin.npm.git;
+
+  if (git.username) {
+    return `${git.username}/${git.project}`;
+  }
+
+  return decodeURIComponent(git.url);
+}
+
 function getAuthor(plugin) {
-  const repository = plugin.npm.links.repository;
   const author = plugin.npm.author ? plugin.npm.author : plugin.npm.publisher;
   const name = author.name || author.username;
   const email = (author.email || '').trim().toLowerCase();
@@ -118,15 +167,11 @@ function getAuthor(plugin) {
     .createHash('md5')
     .update(email)
     .digest('hex');
-  let avatar = `https://avatars.dicebear.com/v2/bottts/${emailHash}.svg`;
-  let fallbackAvatar = avatar;
-  let username;
+  let avatar = `https://gravatar.com/avatar/${emailHash}?d=mp&f=y`;
+  let fallbackAvatar = `https://avatars.dicebear.com/v2/bottts/${emailHash}.svg`;
 
-  if (repository && repository.indexOf('github.com') > -1) {
-    username = repository.split('github.com/')[1].split('/')[0];
-    avatar = `https://github.com/${username}.png`;
-  } else {
-    avatar = `https://gravatar.com/avatar/${emailHash}?d=mp&f=y`;
+  if (plugin.npm.git.isGithub) {
+    avatar = `https://github.com/${plugin.npm.git.username}.png`;
   }
 
   return {
@@ -152,6 +197,13 @@ export const pageQuery = graphql`
         description
         version
         date
+        git {
+          url
+          username
+          project
+          isGithub
+          isGitlab
+        }
         author {
           name
         }

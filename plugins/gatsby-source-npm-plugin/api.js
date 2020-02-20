@@ -1,5 +1,10 @@
 const axios = require('axios');
 const marked = require('marked');
+const gurl = {
+  gh: require('parse-github-url'),
+  gl: require('gitlab-url-parse'),
+  g: require('giturl').parse
+};
 
 const INSOMNIA_PKG = `https://raw.githubusercontent.com/Kong/insomnia/develop/packages/insomnia-app/package.json`;
 
@@ -29,12 +34,46 @@ async function getDetail(pkg) {
 
   const currentVersion = npm.data['dist-tags'].latest;
   const currentPkg = npm.data.versions[currentVersion];
+  const git = { gh: {}, gl: {} };
+
+  // Webify git url
+  if (npm.data.repository && npm.data.repository.url) {
+    git.url = gurl.g(npm.data.repository.url);
+  }
+
+  // Determine github username / cdn url based off repository url
+  if (npm.data.repository && npm.data.repository.url.indexOf('github') > -1) {
+    const gh = gurl.gh(git.url);
+    git.cdn = `https://raw.githubusercontent.com/${gh.repo}/HEAD/`;
+    git.username = gh.owner;
+    git.project = gh.name;
+    git.isGithub = true;
+    git.gh = gh;
+  }
+
+  // Gitlab requires parsing the git url into web format, then parsing for data
+  if (npm.data.repository && npm.data.repository.url.indexOf('gitlab') > -1) {
+    let url = gurl.g(npm.data.repository.url);
+    let isPackage = url.indexOf('/packages/') > -1;
+    if (isPackage) {
+      url = url.replace('packages/', '');
+    }
+
+    const gl = gurl.gl(url);
+    gl.project = isPackage ? `packages/${gl.project}` : gl.project;
+    git.cdn = `https://gitlab.com/${gl.user}/${gl.project}/-/raw/master/`;
+    git.username = gl.user;
+    git.project = gl.project;
+    git.isGitlab = true;
+    git.gl = gl;
+  }
 
   return {
     name: npm.data.name,
     readme: npm.data.readme,
     released: npm.data.time.created,
     repository: npm.data.repository,
+    git,
     // REMOVE FOR GENERIC PLUGIN
     meta: currentPkg.insomnia || {}
   };
@@ -71,9 +110,26 @@ async function getDetails(pkgs) {
   return results;
 }
 
+function buildMarkdownRenderer(pkgDetails) {
+  const renderer = new marked.Renderer();
+  const originalRendererImage = renderer.image.bind(renderer);
+
+  renderer.image = (href, title, text) => {
+    if (href.indexOf('://') < 0) {
+      href = pkgDetails.git.cdn + href;
+    }
+
+    return originalRendererImage(href, title, text);
+  };
+
+  return renderer;
+}
+
 function buildPkg(pkg, detailsMap, downloads) {
   const details = detailsMap[pkg.name];
-  const readme = marked(details.readme || '');
+  const readme = marked(details.readme || '', {
+    renderer: buildMarkdownRenderer(details)
+  });
   const readmeRaw = details.readme;
   const meta = details.meta;
 
@@ -88,6 +144,7 @@ function buildPkg(pkg, detailsMap, downloads) {
     meta,
     npm: {
       ...pkg,
+      git: details.git,
       repository: details.repository,
       released: details.released,
       readme,
