@@ -182,23 +182,26 @@ class Home extends React.Component {
           </p>
         ) : null}
         <p>Here are some things you might want to do.</p>
-        <br/>
-        <div className="d-flex d-flex-space-between">
-          {billingLink && <button className="button">{billingLink}</button>}
-          <button className="button">
+        <div className="d-flex d-flex-space-between d-flex-wrap">
+          {billingLink && (
+            <button className="button mt-3">
+              {billingLink}
+            </button>
+          )}
+          <button className="button mt-3">
             <Link to="/app/teams/">Manage Teams</Link>
           </button>
-          <button className="button">
+          <button className="button mt-3">
             <Link to="/app/change-password/">Change Password</Link>
           </button>
-          <button className="button">
+          <button className="button mt-3">
             <Link to="/app/update-account/">Account Details</Link>
           </button>
-          <button className="button">
+          <button className="button mt-3">
             <Link to="/app/invoices/">Invoice History</Link>
           </button>
           {billingDetails && billingDetails.isBillingAdmin ? (
-            <button className="button">
+            <button className="button mt-3">
               <CancelLink />
             </button>
           ) : null}
