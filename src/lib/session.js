@@ -393,25 +393,11 @@ export async function toggleAdminStatus(teamId, accountId) {
   }
 }
 
-export async function promoteTeamAdmin(teamId, accountId) {
-  // Do legacy stuff first because the error handling is better
-  await util.patch(`/api/teams/${teamId}/accounts/${accountId}`);
-
-  const { errors } = await util.post(`/graphql?teamRemove`, {
-    variables: {
-      accountIdToRemove: accountId,
-      teamId,
-    },
-    query: `
-      mutation ($accountIdToRemove: ID!, $teamId: ID!) {
-        teamRemove(accountIdToRemove: $accountIdToRemove, teamId: $teamId) 
-      }
-    `,
+export async function changeTeamAdminStatus(teamId, accountId, isAdmin) {
+  await util.patch(`/api/teams/${teamId}/admin-status`, {
+    isAdmin,
+    accountId,
   });
-
-  if (errors && errors.length) {
-    throw new Error('Failed to remove member');
-  }
 }
 
 export async function removeFromTeam(teamId, accountId) {

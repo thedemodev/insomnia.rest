@@ -139,8 +139,8 @@ class SignUp extends React.Component {
     return (
       <div key="step-2">
         <div className="form-control">
-          <p className="notice info small">
-            Keep your password safe because it cannot be recovered.
+          <p className="notice warn small">
+            <strong>Keep your password safe because it cannot be recovered.</strong>
             <br/>
             <Link to="https://insomnia.rest/documentation/plus/">Read More</Link> about
             how your password is used to encrypt your data.
@@ -166,6 +166,16 @@ class SignUp extends React.Component {
             I agree to the
             {' '}
             <Link to="https://insomnia.rest/terms/" target="_blank">Terms of Service</Link>
+          </label>
+        </div>
+        <div className="form-control right">
+          <label>
+            <input type="checkbox"
+                   name="agreeToRemember"
+                   required
+                   defaultChecked={agreeToTerms}
+                   onChange={this._handleUpdateInput.bind(this)}/>
+                   I have backed-up my password
           </label>
         </div>
         {error ? <small className="form-control error">** {error}</small> : null}

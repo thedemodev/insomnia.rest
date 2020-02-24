@@ -11,13 +11,18 @@ class PromoteTeamMemberLink extends React.Component {
   async _handleClick(e) {
     e.preventDefault();
 
-    const {teamId, accountId, onRemove} = this.props;
+    const {
+      teamId,
+      accountId,
+      isAdmin,
+      onPromote,
+    } = this.props;
 
     this.setState({loading: true});
 
     try {
-      await session.promoteTeamAdmin(teamId, accountId, true);
-      await onRemove();
+      await session.changeTeamAdminStatus(teamId, accountId, !isAdmin);
+      await onPromote();
     } catch (err) {
       alert(`Failed to remove from team: ${err.message}`);
       this.setState({loading: false});
@@ -25,12 +30,19 @@ class PromoteTeamMemberLink extends React.Component {
   };
 
   render() {
-    const {className, accountIsAdmin} = this.props;
+    const {className, isAdmin, ownerAccountId, accountId} = this.props;
     const {loading} = this.state;
-    const linkText = accountIsAdmin ? 'revoke admin' : 'assign admin';
+
+    // Cannot promote owner (always an admin)
+    if (ownerAccountId === accountId) {
+      return null;
+    }
+
+    const linkText = isAdmin ? '(revoke admin)' : '(promote to admin)';
+
     return (
       <Link to="#" onClick={this._handleClick.bind(this)} className={className}>
-        {loading ? 'updating...' : 'make admin'}
+        {loading ? '(updating...)' : linkText}
       </Link>
     );
   }
@@ -39,8 +51,9 @@ class PromoteTeamMemberLink extends React.Component {
 PromoteTeamMemberLink.propTypes = {
   onPromote: PropTypes.func.isRequired,
   teamId: PropTypes.string.isRequired,
-  accountIsAdmin: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   accountId: PropTypes.string.isRequired,
+  ownerAccountId: PropTypes.string.isRequired,
 };
 
 export default PromoteTeamMemberLink;

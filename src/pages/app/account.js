@@ -30,8 +30,8 @@ class Home extends React.Component {
           <p className="notice info">
             <strong>Payment Required</strong>. Please subscribe to a plan to
             continue using Insomnia.
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Link to="/app/subscribe/" className="button button--compact">
               Update Subscription
             </Link>
@@ -46,8 +46,8 @@ class Home extends React.Component {
           <p className="notice info">
             Subscription <strong>canceled</strong> and will end{' '}
             <strong>{dateString}</strong>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Link to="/app/subscribe/" className="button button--compact">
               Resubscribe
             </Link>
@@ -57,8 +57,8 @@ class Home extends React.Component {
         notice = (
           <p className="notice info">
             Your subscription is <strong>canceled</strong>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Link to="/app/subscribe/" className="button button--compact">
               Resubscribe
             </Link>
@@ -87,8 +87,8 @@ class Home extends React.Component {
             ? ''
             : 's'}{' '}
             left on your free trial
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Link to="/app/subscribe/" className="button button--compact">
               Select a Plan
             </Link>
@@ -99,8 +99,8 @@ class Home extends React.Component {
           <p className="notice warn">
             Your trial has ended. Please subscribe to a plan to continue using
             your account.
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Link to="/app/subscribe/" className="button button--compact">
               Update Subscription
             </Link>
@@ -112,7 +112,7 @@ class Home extends React.Component {
     return (
       <div>
         {notice}
-        <br/>
+        <br />
       </div>
     );
   }
@@ -130,7 +130,7 @@ class Home extends React.Component {
       return null;
     }
 
-    return <p className="notice info">Please verify your account <VerifyButton/></p>;
+    return <p className="notice info">Please verify your account <VerifyButton /></p>;
   }
 
   render() {
@@ -182,32 +182,33 @@ class Home extends React.Component {
           </p>
         ) : null}
         <p>Here are some things you might want to do.</p>
-        <ul>
-          {billingLink && <li>{billingLink}</li>}
-          <li>
+        <br/>
+        <div className="d-flex d-flex-space-between">
+          {billingLink && <button className="button">{billingLink}</button>}
+          <button className="button">
             <Link to="/app/teams/">Manage Teams</Link>
-          </li>
-          <li>
+          </button>
+          <button className="button">
             <Link to="/app/change-password/">Change Password</Link>
-          </li>
-          <li>
+          </button>
+          <button className="button">
             <Link to="/app/update-account/">Account Details</Link>
-          </li>
-          <li>
+          </button>
+          <button className="button">
             <Link to="/app/invoices/">Invoice History</Link>
-          </li>
+          </button>
           {billingDetails && billingDetails.isBillingAdmin ? (
-            <li>
-              <CancelLink/>
-            </li>
+            <button className="button">
+              <CancelLink />
+            </button>
           ) : null}
-          <li>
-            <SignOutLink/>
-          </li>
-          <li>
-            <Link to="/app/delete-account/">Delete Account</Link>
-          </li>
-        </ul>
+        </div>
+        <hr />
+        <div className="center">
+          <SignOutLink />
+          {' | '}
+          <Link to="/app/delete-account/">Delete Account</Link>
+        </div>
       </div>
     );
   }
@@ -223,7 +224,7 @@ Home.propTypes = {
     isVerified: PropTypes.bool.isRequired,
     isPremium: PropTypes.bool.isRequired,
     appNumLaunches: PropTypes.number.isRequired,
-    canManageTeams: PropTypes.bool.isRequired
+    canManageTeams: PropTypes.bool.isRequired,
   }).isRequired,
   billingDetails: PropTypes.shape({
     description: PropTypes.string.isRequired,
@@ -233,8 +234,8 @@ Home.propTypes = {
     subTrialEnd: PropTypes.string.isRequired,
     subCancelled: PropTypes.bool.isRequired,
     subPeriodEnd: PropTypes.string.isRequired,
-    subPercentOff: PropTypes.number.isRequired
-  })
+    subPercentOff: PropTypes.number.isRequired,
+  }),
 };
 
 export default () => (

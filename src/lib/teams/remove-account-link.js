@@ -29,8 +29,14 @@ class RemoveAccountLink extends React.Component {
   };
 
   render() {
-    const {children, className} = this.props;
+    const {children, className, ownerAccountId, accountId} = this.props;
     const {loading} = this.state;
+
+    // Can't remove team owner from team
+    if (accountId === ownerAccountId) {
+      return null;
+    }
+
     return (
       <Link to="#" onClick={this._handleClick.bind(this)} className={className}>
         {loading ? 'removing...' : children}
@@ -43,8 +49,9 @@ RemoveAccountLink.propTypes = {
   onRemove: PropTypes.func.isRequired,
   teamId: PropTypes.string.isRequired,
   teamName: PropTypes.string.isRequired,
-  accountId: PropTypes.string.isRequired,
   accountName: PropTypes.string.isRequired,
+  accountId: PropTypes.string.isRequired,
+  ownerAccountId: PropTypes.string.isRequired,
 };
 
 export default RemoveAccountLink;

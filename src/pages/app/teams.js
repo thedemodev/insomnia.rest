@@ -8,6 +8,7 @@ import AddAccountToTeamForm from '../../lib/teams/add-account-form';
 import App from '../../lib/app-wrapper';
 import Link from '../../components/link';
 import * as session from '../../lib/session';
+import PromoteTeamMemberLink from '../../lib/teams/promote-team-member-link';
 
 class Teams extends React.Component {
   state = {
@@ -96,6 +97,8 @@ class Teams extends React.Component {
       // sort modifies the original.
       const accounts = [...activeTeam.accounts].sort(a => a.id === whoami.accountId ? -1 : 1);
 
+      const isCurrentUserAdmin = activeTeam.accounts.find(a => a.id === whoami.accountId).isAdmin;
+
       inner = (
         <div>
           <UpdateTeamNameForm
@@ -112,28 +115,54 @@ class Teams extends React.Component {
           <div className="form-control">
             <label>Team Members
               <ul>
-                {accounts.map(account => (
-                  <li key={account.id}>
-                    {account.firstName} {account.lastName}
-                    {' '}
-                    <small>({account.email})</small>
-                    {' '}
-                    {account.isAdmin ? (
-                      <strong className="small pull-right">(admin)</strong>
-                    ) : (
-                      <React.Fragment>
-                        <RemoveTeamAccountLink onRemove={this.props.handleReload}
-                                               teamId={activeTeam.id}
-                                               teamName={activeTeam.name}
-                                               className="small pull-right"
-                                               accountId={account.id}
-                                               accountName={`${account.firstName} ${account.lastName}`.trim()}>
-                          remove
-                        </RemoveTeamAccountLink>
-                      </React.Fragment>
-                    )}
-                  </li>
-                ))}
+                {accounts.map(account => {
+                  let label = '';
+                  if (account.id === activeTeam.ownerAccountId) {
+                    label = 'owner';
+                  } else if (account.isAdmin) {
+                    label = 'admin';
+                  }
+
+                  return (
+                    <li key={account.id}>
+                      <div className="d-flex d-flex-space-between">
+                      <span>
+                        {account.firstName} {account.lastName}
+                        {' '}
+                        <small>({account.email})</small>
+                        {label && <small className="super-subtle"> ({label})</small>}
+                      </span>
+                        {' '}
+                        {isCurrentUserAdmin && account.id !== whoami.accountId && (
+                          <span>
+                          <RemoveTeamAccountLink onRemove={this.props.handleReload}
+                                                 teamId={activeTeam.id}
+                                                 ownerAccountId={activeTeam.ownerAccountId}
+                                                 teamName={activeTeam.name}
+                                                 className="small error"
+                                                 accountId={account.id}
+                                                 accountName={`${account.firstName} ${account.lastName}`.trim()}>
+                              (remove)
+                            </RemoveTeamAccountLink>
+                            {' '}
+                            <PromoteTeamMemberLink onPromote={this.props.handleReload}
+                                                   teamId={activeTeam.id}
+                                                   ownerAccountId={activeTeam.ownerAccountId}
+                                                   teamName={activeTeam.name}
+                                                   className="small"
+                                                   accountId={account.id}
+                                                   isAdmin={!!activeTeam.accounts.find(a => account.id === a.id && a.isAdmin)}
+                                                   accountName={`${account.firstName} ${account.lastName}`.trim()}
+                            />
+                        </span>
+                        )}
+                        {account.id === whoami.accountId && (
+                          <small className="super-subtle">(your account)</small>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </label>
           </div>
@@ -218,7 +247,7 @@ class Teams extends React.Component {
 
         {whoami.canManageTeams && teams.length === 0 && (
           <button className="button" onClick={this._createTeam.bind(this)}>
-            {loadingCreateTeam ? 'Creating...' : 'Create Team'}
+            {loadingCreateTeam ? 'Creating...' : 'Enable Team'}
           </button>
         )}
       </div>
