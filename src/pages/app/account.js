@@ -191,7 +191,7 @@ class Home extends React.Component {
             <Link to="/app/change-password/">Change Password</Link>
           </li>
           <li>
-            <Link to="/app/change-email/">Change Email</Link>
+            <Link to="/app/update-account/">Account Details</Link>
           </li>
           <li>
             <Link to="/app/invoices/">Invoice History</Link>

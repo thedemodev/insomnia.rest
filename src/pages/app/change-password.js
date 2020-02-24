@@ -45,7 +45,9 @@ class ChangePassword extends React.Component {
       await session.changePasswordAndEmail(
         this.state.oldPassword,
         this.state.newPassword,
-        whoami.email
+        whoami.email,
+        whoami.firstName,
+        whoami.lastName,
       );
       window.location = '/app/account/';
     } catch (err) {

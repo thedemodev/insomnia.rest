@@ -9,7 +9,7 @@ export async function signup(
   lastName,
   rawEmail,
   rawPassphrase,
-  loginAfter = false
+  loginAfter = false,
 ) {
   const email = _sanitizeEmail(rawEmail);
   const passphrase = _sanitizePassphrase(rawPassphrase);
@@ -30,7 +30,7 @@ export async function signup(
     _getSrpParams(),
     Buffer.from(account.saltAuth, 'hex'),
     Buffer.from(account.email, 'utf8'),
-    Buffer.from(authSecret, 'hex')
+    Buffer.from(authSecret, 'hex'),
   ).toString('hex');
 
   // Encode keypair
@@ -82,7 +82,7 @@ export async function login(rawEmail, rawPassphrase, authSecret = null) {
     Buffer.from(saltAuth, 'hex'),
     Buffer.from(email, 'utf8'),
     Buffer.from(authSecret, 'hex'),
-    Buffer.from(secret1, 'hex')
+    Buffer.from(secret1, 'hex'),
   );
   const srpA = c.computeA().toString('hex');
   const { sessionStarterId, srpB } = await util.post('/auth/login-a', { srpA, email });
@@ -121,7 +121,7 @@ export function subscribe(tokenId, planId, quantity, memo) {
   });
 }
 
-export function setSessionId (sessionId) {
+export function setSessionId(sessionId) {
   // Store the information for later
   localStorage.setItem('currentSessionId', sessionId);
 }
@@ -178,7 +178,13 @@ export function getAuthSalts(email) {
   return util.post('/auth/login-s', { email });
 }
 
-export async function changePasswordAndEmail(rawOldPassphrase, rawNewPassphrase, rawNewEmail) {
+export async function changePasswordAndEmail(
+  rawOldPassphrase,
+  rawNewPassphrase,
+  rawNewEmail,
+  newFirstName,
+  newLastName,
+) {
   // Sanitize inputs
   const oldPassphrase = _sanitizePassphrase(rawOldPassphrase);
   const newPassphrase = _sanitizePassphrase(rawNewPassphrase);
@@ -199,14 +205,14 @@ export async function changePasswordAndEmail(rawOldPassphrase, rawNewPassphrase,
     _getSrpParams(),
     Buffer.from(saltAuth, 'hex'),
     Buffer.from(oldEmail, 'utf8'),
-    Buffer.from(oldAuthSecret, 'hex')
+    Buffer.from(oldAuthSecret, 'hex'),
   ).toString('hex');
 
   const newVerifier = srp.computeVerifier(
     _getSrpParams(),
     Buffer.from(saltAuth, 'hex'),
     Buffer.from(newEmail, 'utf8'),
-    Buffer.from(newAuthSecret, 'hex')
+    Buffer.from(newAuthSecret, 'hex'),
   ).toString('hex');
 
   // Re-encrypt existing keys with new secret
@@ -215,10 +221,12 @@ export async function changePasswordAndEmail(rawOldPassphrase, rawNewPassphrase,
 
   return util.post(`/auth/change-password`, {
     verifier: oldVerifier,
-    newEmail: newEmail,
+    newEmail,
+    newFirstName,
+    newLastName,
     encSymmetricKey: encSymmetricKey,
     newVerifier,
-    newEncSymmetricKey
+    newEncSymmetricKey,
   });
 }
 
@@ -252,14 +260,14 @@ async function _inviteToTeamLegacy(teamId, emailToInvite, rawPassphrase) {
     newResourceGroupKeys[resourceGroupId] = crypt.recryptRSAWithJWK(
       privateKeyJWK,
       publicKeyJWK,
-      resourceGroupKeys[resourceGroupId]
+      resourceGroupKeys[resourceGroupId],
     );
   }
 
   // Actually invite the member
   await util.post(`/api/teams/${teamId}/invite-b`, {
     accountId,
-    resourceGroupKeys: newResourceGroupKeys
+    resourceGroupKeys: newResourceGroupKeys,
   });
 }
 
@@ -271,7 +279,7 @@ export async function inviteToTeam(teamId, emailToInvite, rawPassphrase) {
   const { data, errors } = await util.post(`/graphql?teamAddInstructions`, {
     variables: {
       teamId,
-      email: emailToInvite
+      email: emailToInvite,
     },
     query: `
       query ($email: String!, $teamId: ID!) {
@@ -282,7 +290,7 @@ export async function inviteToTeam(teamId, emailToInvite, rawPassphrase) {
             encWithPublicKey
          }
       }
-    `
+    `,
   });
 
   if (errors && errors.length) {
@@ -313,12 +321,12 @@ export async function inviteToTeam(teamId, emailToInvite, rawPassphrase) {
     const encSymmetricKey = crypt.recryptRSAWithJWK(
       privateKeyJWK,
       publicKeyJWK,
-      instruction.encSymmetricKey
+      instruction.encSymmetricKey,
     );
     nextKeys.push({
       encSymmetricKey,
       accountId: instruction.accountId,
-      projectId: instruction.projectId
+      projectId: instruction.projectId,
     });
   }
 
@@ -326,13 +334,13 @@ export async function inviteToTeam(teamId, emailToInvite, rawPassphrase) {
   // Ask the server what we need to do to invite the member
   const { errors: errorsMutation } = await util.post(`/graphql?teamAdd`, {
     variables: {
-      keys: nextKeys
+      keys: nextKeys,
     },
     query: `
       mutation ($keys: [TeamAddKeyInput!]!) {
         teamAdd(keys: $keys) 
       }
-    `
+    `,
   });
 
   if (errorsMutation && errorsMutation.length) {
@@ -356,7 +364,7 @@ export async function leaveTeam(teamId) {
       mutation ($teamId: ID!) {
         teamLeave(teamId: $teamId) 
       }
-    `
+    `,
   });
 
   if (errors && errors.length) {
@@ -377,7 +385,7 @@ export async function toggleAdminStatus(teamId, accountId) {
       mutation ($accountIdToRemove: ID!, $teamId: ID!) {
         teamRemove(accountIdToRemove: $accountIdToRemove, teamId: $teamId) 
       }
-    `
+    `,
   });
 
   if (errors && errors.length) {
@@ -398,7 +406,7 @@ export async function promoteTeamAdmin(teamId, accountId) {
       mutation ($accountIdToRemove: ID!, $teamId: ID!) {
         teamRemove(accountIdToRemove: $accountIdToRemove, teamId: $teamId) 
       }
-    `
+    `,
   });
 
   if (errors && errors.length) {
@@ -419,7 +427,7 @@ export async function removeFromTeam(teamId, accountId) {
       mutation ($accountIdToRemove: ID!, $teamId: ID!) {
         teamRemove(accountIdToRemove: $accountIdToRemove, teamId: $teamId) 
       }
-    `
+    `,
   });
 
   if (errors && errors.length) {
@@ -448,7 +456,7 @@ async function _initAccount(firstName, lastName, email) {
     id: await crypt.generateAccountId(),
     saltEnc: await crypt.getRandomHex(),
     saltAuth: await crypt.getRandomHex(),
-    saltKey: await crypt.getRandomHex()
+    saltKey: await crypt.getRandomHex(),
   };
 }
 
