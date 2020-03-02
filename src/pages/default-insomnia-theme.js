@@ -11,6 +11,9 @@ export const DEFAULT_INSOMNIA_THEME = {
   foreground: {
     default: '#eee',
   },
+  highlight: {
+    default: '#eee',
+  },
   styles: {
     transparentOverlay: {
       background: {

@@ -43,30 +43,14 @@ export default class ThemeGenerator extends React.PureComponent {
             <header className="run-in__header">
               <h1 style={{ color: this.state.foreground.default }}>Theme Generator</h1>
             </header>
-            <SvgPreview theme={{
-              background: {
-                default: 'black',
-              },
-              foreground: {
-                default: 'white',
-                success: 'green',
-                info: 'blue',
-                notice: 'yellow',
-                warning: 'orange',
-                surprise: 'purple',
-                danger: 'red',
-              },
-              highlight: {
-                md: 'gray',
-              }
-            }} />
+            <SvgPreview theme={this.state} />
 
           </section>
           <section className="container header--big run-in-container">
             <header className="run-in__header">
               Colors
             </header>
-            <BlockPicker onChange={c => this.handleChange(c, undefined, 'foreground', 'default')} color={this.state.foreground.default} />
+            <BlockPicker hide onChange={c => this.handleChange(c, undefined, 'foreground', 'default')} color={this.state.foreground.default} />
           </section>
 
         </article>
@@ -110,6 +94,7 @@ const SvgPreview = ({ theme }) => {
         <line x1="0" x2="25%" y1="10%" y2="10%" strokeWidth="1" stroke={theme.highlight.md} />
 
         {/* Colors */}
+        <rect x="30%" y="85%" width="5%" height="8%" fill={theme.foreground.default} />
         <rect x="40%" y="85%" width="5%" height="8%" fill={theme.foreground.success} />
         <rect x="50%" y="85%" width="5%" height="8%" fill={theme.foreground.notice} />
         <rect x="60%" y="85%" width="5%" height="8%" fill={theme.foreground.warning} />
