@@ -19,20 +19,20 @@ const themes = [
 
 const areas = [
   { label: "Default", key: "" },
-  { label: "Dialog", key: "dialog" },
-  { label: "Dialog footer", key: "dialogFooter" },
-  { label: "Dialog header", key: "dialogHeader" },
-  { label: "Dropdown", key: "dropdown" },
-  { label: "Editor", key: "editor" },
-  { label: "Link", key: "link" },
-  { label: "Overlay", key: "overlay" },
+  // { label: "Dialog", key: "dialog" },
+  // { label: "Dialog footer", key: "dialogFooter" },
+  // { label: "Dialog header", key: "dialogHeader" },
+  // { label: "Dropdown", key: "dropdown" },
+  // { label: "Editor", key: "editor" },
+  // { label: "Link", key: "link" },
+  // { label: "Overlay", key: "overlay" },
   { label: "Pane", key: "pane" },
   { label: "Pane Header", key: "paneHeader" },
   { label: "Sidebar", key: "sidebar" },
   { label: "Sidebar header", key: "sidebarHeader" },
-  { label: "Sidebar list", key: "sidebarList" },
-  { label: "Tooltip", key: "tooltip" },
-  { label: "Transparent overlay", key: "transparentOverlay" }
+  // { label: "Sidebar list", key: "sidebarList" },
+  // { label: "Tooltip", key: "tooltip" },
+  // { label: "Transparent overlay", key: "transparentOverlay" }
 ];
 
 export default class ThemeGenerator extends React.PureComponent {

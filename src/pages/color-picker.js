@@ -3,8 +3,8 @@ import { BlockPicker } from 'react-color';
 
 const popUpColorPickerStyle = hex => ({
   container: {
-    display: 'flex',
-    alignItems: 'center',
+    position: 'relative',
+    display: 'block',
   },
   color: {
     width: '28px',
@@ -14,7 +14,7 @@ const popUpColorPickerStyle = hex => ({
   },
   label: {
     margin: '0px 0px 0px 12px',
-    paddingTop: '3px',
+    paddingBottom: '3px',
   },
   swatch: {
     padding: '4px',
@@ -25,6 +25,7 @@ const popUpColorPickerStyle = hex => ({
     cursor: 'pointer',
   },
   popover: {
+    marginTop: '10px',
     position: 'absolute',
     zIndex: '2',
   },
@@ -53,19 +54,22 @@ export default class ColorPicker extends React.Component {
   render() {
     const { color, onChange, label, className } = this.props;
     const styles = popUpColorPickerStyle(color);
-    return (<div style={styles.container} className={className}>
-      <div style={styles.swatch} onClick={this.handleClick}>
-        <div style={styles.color} />
-      </div>
-      {this.state.displayColorPicker ? (
-        <div style={styles.popover}>
-          <div style={styles.cover} onClick={this.handleClose} />
-          <span></span>
-          <BlockPicker color={color} onChange={onChange} />
+    return (
+      <div className={className} style={{display: 'flex', alignItems: 'center'}}>
+        <div style={styles.container}>
+          <div style={styles.swatch} onClick={this.handleClick}>
+            <div style={styles.color} />
+          </div>
+          {this.state.displayColorPicker ? (
+            <div style={styles.popover}>
+              <div style={styles.cover} onClick={this.handleClose} />
+              <BlockPicker color={color} onChange={onChange} />
+            </div>
+
+          ) : null}
         </div>
-        
-      ) : null}
-      <h5 style={styles.label}>{label}</h5>
-    </div>);
+        <h5 style={styles.label}>{label}</h5>
+      </div>
+    );
   }
 }
