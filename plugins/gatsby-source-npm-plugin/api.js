@@ -3,7 +3,7 @@ const marked = require('marked');
 const gurl = {
   gh: require('parse-github-url'),
   gl: require('gitlab-url-parse'),
-  g: require('giturl').parse
+  g: require('giturl').parse,
 };
 
 const INSOMNIA_PKG = `https://raw.githubusercontent.com/Kong/insomnia/develop/packages/insomnia-app/package.json`;
@@ -14,7 +14,7 @@ const NPM_REG_INFO = name =>
   `http://registry.npmjs.com/${encodeURIComponent(name)}`;
 const NPM_API_SEARCH = (query, size, offset) =>
   `https://api.npms.io/v2/search?q=${encodeURIComponent(
-    query
+    query,
   )}&size=${size}&from=${offset}`;
 const NPM_API_DWNINFO = (period, pkg) =>
   `https://api.npmjs.org/downloads/point/${period}/${pkg}`;
@@ -75,7 +75,7 @@ async function getDetail(pkg) {
     repository: npm.data.repository,
     git,
     // REMOVE FOR GENERIC PLUGIN
-    meta: currentPkg.insomnia || {}
+    meta: currentPkg.insomnia || {},
   };
 }
 
@@ -128,7 +128,7 @@ function buildMarkdownRenderer(pkgDetails) {
 function buildPkg(pkg, detailsMap, downloads) {
   const details = detailsMap[pkg.name];
   const readme = marked(details.readme || '', {
-    renderer: buildMarkdownRenderer(details)
+    renderer: buildMarkdownRenderer(details),
   });
   const readmeRaw = details.readme;
   const meta = details.meta;
@@ -143,7 +143,7 @@ function buildPkg(pkg, detailsMap, downloads) {
       lastDay: lastDay ? lastDay.downloads : 0,
       lastWeek: lastWeek ? lastWeek.downloads : 0,
       lastMonth: lastMonth ? lastMonth.downloads : 0,
-      lastYear: lastYear ? lastYear.downloads : 0
+      lastYear: lastYear ? lastYear.downloads : 0,
     },
     meta,
     npm: {
@@ -152,8 +152,8 @@ function buildPkg(pkg, detailsMap, downloads) {
       repository: details.repository,
       released: details.released,
       readme,
-      readmeRaw
-    }
+      readmeRaw,
+    },
   };
 }
 
@@ -175,7 +175,7 @@ async function fetch(query, allowDeprecated, filter, offset, size) {
   // Filter out core plugins
   // REMOVE FOR GENERIC PLUGIN
   results = pkgs.results.filter(
-    obj => corePlugins.indexOf(obj.package.name) < 0
+    obj => corePlugins.indexOf(obj.package.name) < 0,
   );
 
   // Filter out packages when value exists
@@ -203,23 +203,28 @@ async function fetch(query, allowDeprecated, filter, offset, size) {
     lastDay: await getDownloads('last-day', results),
     lastWeek: await getDownloads('last-week', results),
     lastMonth: await getDownloads('last-month', results),
-    lastYear: await getDownloads(getLastYearRange(), results)
+    lastYear: await getDownloads(getLastYearRange(), results),
   };
 
   return {
     packages: results.map(obj =>
-      buildPkg(obj.package, detailsMap, downloadMap)
+      buildPkg(obj.package, detailsMap, downloadMap),
     ),
-    totalResults: pkgs.total
+    totalResults: pkgs.total,
   };
 }
 
 module.exports = {
   getPackages: async function(
     query,
-    { filter, allowDeprecated = false, perFetch = 100 }
+    { filter, allowDeprecated = false, perFetch = 100 },
   ) {
-    let results = await fetch(query, allowDeprecated, filter, 0, perFetch);
+    let results;
+    try {
+      results = await fetch(query, allowDeprecated, filter, 0, perFetch);
+    } catch (err) {
+      console.log('HELLO', err.response);
+    }
     let currentOffset = perFetch;
     let total = results.totalResults;
 
@@ -229,12 +234,12 @@ module.exports = {
         allowDeprecated,
         filter,
         currentOffset,
-        perFetch
+        perFetch,
       );
       currentOffset += perFetch;
       results.packages = results.packages.concat(nextPage.packages);
     }
 
     return results;
-  }
+  },
 };
