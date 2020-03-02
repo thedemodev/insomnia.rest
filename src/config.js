@@ -22,6 +22,10 @@ export const menus = {
       key: 'pricing',
       url: '/pricing/'
     }, {
+      name: 'Theme Gen',
+      key: 'theme-gen',
+      url: '/theme-generator/'
+    }, {
       name: 'Plugins',
       key: 'plugins',
       url: '/plugins/'
