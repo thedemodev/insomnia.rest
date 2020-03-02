@@ -3,35 +3,91 @@ import SocialCards from '../components/social-cards';
 import Title from '../partials/title';
 import { DEFAULT_INSOMNIA_THEME } from './default-insomnia-theme';
 import ColorPicker from './color-picker';
+import { Tab, Tabs } from 'react-tabify';
+
+const themes = [
+  "Default",
+  "Success",
+  "Notice",
+  "Warning",
+  "Danger",
+  "Surprise",
+  "Info"
+];
+
+const areas = [
+  "",
+  "dialog",
+  "dialogFooter",
+  "dialogHeader",
+  "dropdown",
+  "editor",
+  "link",
+  "overlay",
+  "pane",
+  "paneHeader",
+  "sidebar",
+  "sidebarHeader",
+  "sidebarList",
+  "tooltip",
+  "transparentOverlay"
+];
+
+const highlights = [
+  { label: 'Tiny-er', key: 'xxs' },
+  { label: 'Tiny', key: 'xs' },
+  { label: 'Small', key: 'sm' },
+  { label: 'Medium', key: 'md' },
+  { label: 'Large', key: 'lg' },
+  { label: 'Huge', key: 'xl' },
+]
 
 export default class ThemeGenerator extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = DEFAULT_INSOMNIA_THEME;
+    this.state = { theme: DEFAULT_INSOMNIA_THEME, displayName: 'My custom theme', name: 'my-custom-theme', selectedArea: undefined };
   }
 
   handleChange(color, areaName, layerName, themeName) {
     const hex = color.hex;
-    const area = areaName ? this.state.styles[areaName] : this.state;
+    const { theme } = this.state;
 
-    const newState = {
-      ...area, [layerName]: {
-        ...this.state[layerName], [themeName]: hex
+    if (areaName) {
+      const newTheme = {
+        ...theme,
+        styles: {
+          ...theme.styles,
+          [areaName]: {
+            ...theme.styles[areaName],
+            [layerName]: {
+              ...theme.styles[areaName][layerName],
+              [themeName]: hex
+            }
+          }
+        }
+      };
+
+      this.setState({ theme: newTheme });
+      return;
+    }
+
+    const newTheme = {
+      ...theme,
+      [layerName]: {
+        ...theme[layerName],
+        [themeName]: hex
       }
     };
 
-    // const layer = { [layerName]: theme };
-    // const updatedState = { ...this.state };
-
-    // if (first) {
-    //   this.state[first];
-    // }
-
-    this.setState(newState);
+    this.setState({ theme: newTheme });
   }
 
   render() {
+    const { selectedArea, theme } = this.state;
+    const colorClasses = "col-3";
+    const themeForArea = selectedArea ? theme.styles[selectedArea] : theme;
+
     return (
       <React.Fragment>
         <article>
@@ -40,22 +96,58 @@ export default class ThemeGenerator extends React.PureComponent {
 
           <section className="container header--big run-in-container">
             <header className="run-in__header">
-              <h1 style={{ color: this.state.foreground.default }}>Theme Generator</h1>
+              <h1>Theme Generator</h1>
             </header>
-            <SvgPreview theme={this.state} />
+            <SvgPreview theme={theme} />
 
           </section>
           <section className="container header--big run-in-container">
-            <h1>Foreground</h1>
-            <ColorPicker label="Default" onChange={c => this.handleChange(c, undefined, 'foreground', 'default')} color={this.state.foreground.default} />
 
-            <h1>Background</h1>
-            <ColorPicker label="Default" onChange={c => this.handleChange(c, undefined, 'background', 'default')} color={this.state.background.default} />
+            <Tabs>{areas.map(area => <Tab label={area}>
+              <div className="padding-top-sm">
+                <h1>Foreground</h1>
+                <div className="row">
+                  <ColorPicker
+                    className={colorClasses}
+                    label="Text color"
+                    onChange={c => this.handleChange(c, selectedArea, 'foreground', 'default')}
+                    color={themeForArea.foreground.default}
+                  />
+                </div>
+              </div>
 
-            <h1>Highlight</h1>
-            <ColorPicker label="Md" onChange={c => this.handleChange(c, undefined, 'highlight', 'md')} color={this.state.highlight.default} />
+              <div className="padding-top-sm">
+                <h1>Background</h1>
+                <div className="row">
+                  {themes.map(t => (
+                    <ColorPicker
+                      key={t}
+                      className={colorClasses}
+                      label={t}
+                      onChange={c => this.handleChange(c, selectedArea, 'background', t.toLowerCase())}
+                      color={themeForArea.background[t.toLowerCase()]}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="padding-top-sm">
+                <h1>Highlight</h1>
+                <div className="row">
+                  {highlights.map(({ label, key }) => (
+                    <ColorPicker
+                      key={key}
+                      className={colorClasses}
+                      label={label}
+                      onChange={c => this.handleChange(c, selectedArea, 'highlight', key.toLowerCase())}
+                      color={themeForArea.highlight[key.toLowerCase()]}
+                    />
+                  ))}
+                </div>
+              </div>
+            </Tab>)}
+            </Tabs>
           </section>
-
         </article>
       </React.Fragment>
     );

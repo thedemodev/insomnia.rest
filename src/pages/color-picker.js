@@ -13,7 +13,7 @@ const popUpColorPickerStyle = hex => ({
     background: hex,
   },
   label: {
-    margin: '0px 0px 0px 8px',
+    margin: '0px 0px 0px 12px',
     paddingTop: '3px',
   },
   swatch: {
@@ -51,9 +51,9 @@ export default class ColorPicker extends React.Component {
   };
 
   render() {
-    const { color, onChange, label } = this.props;
+    const { color, onChange, label, className } = this.props;
     const styles = popUpColorPickerStyle(color);
-    return (<div style={styles.container}>
+    return (<div style={styles.container} className={className}>
       <div style={styles.swatch} onClick={this.handleClick}>
         <div style={styles.color} />
       </div>
@@ -65,7 +65,7 @@ export default class ColorPicker extends React.Component {
         </div>
         
       ) : null}
-      <span style={styles.label}>{label}</span>
+      <h5 style={styles.label}>{label}</h5>
     </div>);
   }
 }
