@@ -35,20 +35,49 @@ const areas = [
   { label: "Transparent overlay", key: "transparentOverlay" }
 ];
 
-const highlights = [
-  { label: 'Tiny-er', key: 'xxs' },
-  { label: 'Tiny', key: 'xs' },
-  { label: 'Small', key: 'sm' },
-  { label: 'Medium', key: 'md' },
-  { label: 'Large', key: 'lg' },
-  { label: 'Huge', key: 'xl' },
-]
-
 export default class ThemeGenerator extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = { theme: DEFAULT_INSOMNIA_THEME, displayName: 'My custom theme', name: 'my-custom-theme', activeKey: 0 };
+  }
+
+  handleHighlightChange(color, areaName) {
+    const { theme } = this.state;
+    const { rgb } = color;
+
+    const newHighlight = {
+      default: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
+      xxs: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)`,
+      xs: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)`,
+      sm: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`,
+      md: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)`,
+      lg: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`,
+      xl: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8)`,
+    };
+
+    if (areaName) {
+      const newTheme = {
+        ...theme,
+        styles: {
+          ...theme.styles,
+          [areaName]: {
+            ...theme.styles[areaName],
+            highlight: newHighlight
+          }
+        }
+      };
+
+      this.setState({ theme: newTheme });
+      return;
+    }
+
+    const newTheme = {
+      ...theme,
+      highlight: newHighlight
+    };
+
+    this.setState({ theme: newTheme });
   }
 
   handleChange(color, areaName, layerName, themeName) {
@@ -144,15 +173,12 @@ export default class ThemeGenerator extends React.PureComponent {
                   <div className="padding-top-sm">
                     <h1>Highlight</h1>
                     <div className="row">
-                      {highlights.map(({ label, key }) => (
-                        <ColorPicker
-                          key={key}
-                          className={colorClasses}
-                          label={label}
-                          onChange={c => this.handleChange(c, activeArea, 'highlight', key.toLowerCase())}
-                          color={themeForArea.highlight ? themeForArea.highlight[key.toLowerCase()] : undefined}
-                        />
-                      ))}
+                      <ColorPicker
+                        className={colorClasses}
+                        label={label}
+                        onChange={c => this.handleHighlightChange(c, activeArea)}
+                        color={themeForArea.highlight ? themeForArea.highlight.default : undefined}
+                      />
                     </div>
                   </div>
                 </Tab>
