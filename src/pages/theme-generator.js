@@ -1,5 +1,7 @@
 import React from 'react';
 import SocialCards from '../components/social-cards';
+
+import Link from '../components/link';
 import Title from '../partials/title';
 import { DEFAULT_INSOMNIA_THEME } from './default-insomnia-theme';
 import ColorPicker from './color-picker';
@@ -43,6 +45,7 @@ export default class ThemeGenerator extends React.PureComponent {
               <h1 style={{ color: this.state.foreground.default }}>Theme Generator</h1>
             </header>
             <SvgPreview theme={this.state} />
+            <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
 
           </section>
           <section className="container header--big run-in-container">
@@ -55,7 +58,6 @@ export default class ThemeGenerator extends React.PureComponent {
             <h1>Highlight</h1>
             <ColorPicker label="Md" onChange={c => this.handleChange(c, undefined, 'highlight', 'md')} color={this.state.highlight.default} />
           </section>
-
         </article>
       </React.Fragment>
     );
@@ -109,3 +111,24 @@ const SvgPreview = ({ theme }) => {
   );
 };
 
+const InstallButton = ({ theme, name }) => {
+  const fullTheme = {
+    name: 'custom-theme',
+    displayName: 'Custom Name',
+    theme,
+  };
+  const main = `module.exports.themes = [${JSON.stringify(fullTheme, null, 2)}];`;
+
+  const url = 'insomnia://plugins/create?' + [
+    `name=${encodeURIComponent(name)}`,
+    `main=${encodeURIComponent(main)}`,
+    `version=${encodeURIComponent('1.0.0')}`,
+    `theme=${encodeURIComponent(fullTheme.name)}`
+  ].join('&');
+
+  return (
+    <Link to={url} className="button">
+      Install
+    </Link>
+  );
+};
