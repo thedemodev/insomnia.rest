@@ -41,7 +41,7 @@ export default class ThemeGenerator extends React.PureComponent {
 
     this.state = {
       theme: DEFAULT_INSOMNIA_THEME,
-      displayName: 'Custom Theme',
+      displayName: 'Geoff\'s Custom Theme',
       name: 'custom-theme',
       activeKey: 0,
     };
@@ -119,12 +119,19 @@ export default class ThemeGenerator extends React.PureComponent {
     this.setState({ theme: newTheme });
   }
 
+  handleUpdateInput(e) {
+    this.setState({
+      displayName: e.target.value,
+      name: e.target.value.toLowerCase().replace(' ', '-')
+    });
+  }
+
   handleTabSelect = activeKey => {
     this.setState({ activeKey });
   };
 
   render() {
-    const { activeKey, theme } = this.state;
+    const { activeKey, theme, displayName } = this.state;
     const colorClasses = "col-3";
     const activeArea = areas[activeKey].key;
     const themeForArea = activeArea ? theme.styles[activeArea] : theme;
@@ -200,8 +207,11 @@ export default class ThemeGenerator extends React.PureComponent {
                 </Tab>
               ))}
             </Tabs>
-            <div className="right pt-4">
-              <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
+            <div className="right padding-top-sm form-row">
+              <div className="form-control m-0 mr-1">
+                <input type="text" defaultValue={displayName} onChange={this.handleDisplayNameChange} />
+              </div>
+              <InstallButton theme={this.state} />
             </div>
           </section>
         </article>
@@ -267,18 +277,18 @@ const SvgPreview = ({ theme }) => {
   );
 };
 
-const InstallButton = ({ theme }) => {
+const InstallButton = ({ theme, displayName, name }) => {
   const main = `module.exports.themes = [${JSON.stringify(theme, null, 2)}];`;
 
   const url = 'insomnia://plugins/create?' + [
-    `name=${encodeURIComponent('insomnia-plugin-' + theme.name)}`,
+    `name=${encodeURIComponent('insomnia-plugin-' + name)}`,
     `main=${encodeURIComponent(main)}`,
     `version=${encodeURIComponent('1.0.0')}`,
-    `theme=${encodeURIComponent(theme.name)}`,
+    `theme=${encodeURIComponent(displayName)}`,
   ].join('&');
 
   return (
-    <Link to={url} className="button button--big">
+    <Link to={url} className="button m-0 ml-1" style={{maxWidth: '150px'}}>
       Install Theme
     </Link>
   );
