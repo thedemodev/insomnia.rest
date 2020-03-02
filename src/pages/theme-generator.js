@@ -99,13 +99,13 @@ const SvgPreview = ({ theme }) => {
         <line x1="0" x2="25%" y1="10%" y2="10%" strokeWidth="1" stroke={theme.highlight.md} />
 
         {/* Colors */}
-        <rect x="30%" y="85%" width="5%" height="8%" fill={theme.foreground.default} />
-        <rect x="40%" y="85%" width="5%" height="8%" fill={theme.foreground.success} />
-        <rect x="50%" y="85%" width="5%" height="8%" fill={theme.foreground.notice} />
-        <rect x="60%" y="85%" width="5%" height="8%" fill={theme.foreground.warning} />
-        <rect x="70%" y="85%" width="5%" height="8%" fill={theme.foreground.danger} />
-        <rect x="80%" y="85%" width="5%" height="8%" fill={theme.foreground.surprise} />
-        <rect x="90%" y="85%" width="5%" height="8%" fill={theme.foreground.info} />
+        <rect x="30%" y="85%" width="5%" height="8%" fill={theme.background.default} />
+        <rect x="40%" y="85%" width="5%" height="8%" fill={theme.background.success} />
+        <rect x="50%" y="85%" width="5%" height="8%" fill={theme.background.notice} />
+        <rect x="60%" y="85%" width="5%" height="8%" fill={theme.background.warning} />
+        <rect x="70%" y="85%" width="5%" height="8%" fill={theme.background.danger} />
+        <rect x="80%" y="85%" width="5%" height="8%" fill={theme.background.surprise} />
+        <rect x="90%" y="85%" width="5%" height="8%" fill={theme.background.info} />
       </g>
     </svg>
   );
