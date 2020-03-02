@@ -18,30 +18,21 @@ const themes = [
 ];
 
 const areas = [
-  '',
-  'dialog',
-  'dialogFooter',
-  'dialogHeader',
-  'dropdown',
-  'editor',
-  'link',
-  'overlay',
-  'pane',
-  'paneHeader',
-  'sidebar',
-  'sidebarHeader',
-  'sidebarList',
-  'tooltip',
-  'transparentOverlay',
-];
-
-const highlights = [
-  { label: 'Tiny-er', key: 'xxs' },
-  { label: 'Tiny', key: 'xs' },
-  { label: 'Small', key: 'sm' },
-  { label: 'Medium', key: 'md' },
-  { label: 'Large', key: 'lg' },
-  { label: 'Huge', key: 'xl' },
+  { label: "Default", key: "" },
+  { label: "Dialog", key: "dialog" },
+  { label: "Dialog footer", key: "dialogFooter" },
+  { label: "Dialog header", key: "dialogHeader" },
+  { label: "Dropdown", key: "dropdown" },
+  { label: "Editor", key: "editor" },
+  { label: "Link", key: "link" },
+  { label: "Overlay", key: "overlay" },
+  { label: "Pane", key: "pane" },
+  { label: "Pane Header", key: "paneHeader" },
+  { label: "Sidebar", key: "sidebar" },
+  { label: "Sidebar header", key: "sidebarHeader" },
+  { label: "Sidebar list", key: "sidebarList" },
+  { label: "Tooltip", key: "tooltip" },
+  { label: "Transparent overlay", key: "transparentOverlay" }
 ];
 
 export default class ThemeGenerator extends React.PureComponent {
@@ -52,8 +43,46 @@ export default class ThemeGenerator extends React.PureComponent {
       theme: DEFAULT_INSOMNIA_THEME,
       displayName: 'Custom Theme',
       name: 'custom-theme',
-      selectedArea: undefined,
+      activeKey: 0,
     };
+  }
+
+  handleHighlightChange(color, areaName) {
+    const { theme } = this.state;
+    const { rgb } = color;
+
+    const newHighlight = {
+      default: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
+      xxs: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)`,
+      xs: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)`,
+      sm: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`,
+      md: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)`,
+      lg: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`,
+      xl: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8)`,
+    };
+
+    if (areaName) {
+      const newTheme = {
+        ...theme,
+        styles: {
+          ...theme.styles,
+          [areaName]: {
+            ...theme.styles[areaName],
+            highlight: newHighlight
+          }
+        }
+      };
+
+      this.setState({ theme: newTheme });
+      return;
+    }
+
+    const newTheme = {
+      ...theme,
+      highlight: newHighlight
+    };
+
+    this.setState({ theme: newTheme });
   }
 
   handleChange(color, areaName, layerName, themeName) {
@@ -90,10 +119,15 @@ export default class ThemeGenerator extends React.PureComponent {
     this.setState({ theme: newTheme });
   }
 
+  handleTabSelect = activeKey => {
+    this.setState({ activeKey });
+  };
+
   render() {
-    const { selectedArea, theme } = this.state;
-    const colorClasses = 'col-3';
-    const themeForArea = selectedArea ? theme.styles[selectedArea] : theme;
+    const { activeKey, theme } = this.state;
+    const colorClasses = "col-3";
+    const activeArea = areas[activeKey].key;
+    const themeForArea = activeArea ? theme.styles[activeArea] : theme;
 
     return (
       <React.Fragment>
@@ -120,49 +154,49 @@ export default class ThemeGenerator extends React.PureComponent {
           </section>
           <section className="container header--big run-in-container">
 
-            <Tabs>{areas.map(area => <Tab label={area}>
-              <div className="padding-top-sm">
-                <h1>Foreground</h1>
-                <div className="row">
-                  <ColorPicker
-                    className={colorClasses}
-                    label="Text color"
-                    onChange={c => this.handleChange(c, selectedArea, 'foreground', 'default')}
-                    color={themeForArea.foreground.default}
-                  />
-                </div>
-              </div>
+            <Tabs activeKey={activeKey} onSelect={this.handleTabSelect}>
+              {areas.map(({ label, key }) => (
+                <Tab label={label} key={key}>
+                  <div className="padding-top-sm">
+                    <h1>Foreground</h1>
+                    <div className="row">
+                      <ColorPicker
+                        className={colorClasses}
+                        label="Text color"
+                        onChange={c => this.handleChange(c, activeArea, 'foreground', 'default')}
+                        color={themeForArea.foreground ? themeForArea.foreground.default : undefined}
+                      />
+                    </div>
+                  </div>
 
-              <div className="padding-top-sm">
-                <h1>Background</h1>
-                <div className="row">
-                  {themes.map(t => (
-                    <ColorPicker
-                      key={t}
-                      className={colorClasses}
-                      label={t}
-                      onChange={c => this.handleChange(c, selectedArea, 'background', t.toLowerCase())}
-                      color={themeForArea.background[t.toLowerCase()]}
-                    />
-                  ))}
-                </div>
-              </div>
+                  <div className="padding-top-sm">
+                    <h1>Background</h1>
+                    <div className="row">
+                      {themes.map(t => (
+                        <ColorPicker
+                          key={t}
+                          className={colorClasses}
+                          label={t}
+                          onChange={c => this.handleChange(c, activeArea, 'background', t.toLowerCase())}
+                          color={themeForArea.background ? themeForArea.background[t.toLowerCase()] : undefined}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-              <div className="padding-top-sm">
-                <h1>Highlight</h1>
-                <div className="row">
-                  {highlights.map(({ label, key }) => (
-                    <ColorPicker
-                      key={key}
-                      className={colorClasses}
-                      label={label}
-                      onChange={c => this.handleChange(c, selectedArea, 'highlight', key.toLowerCase())}
-                      color={themeForArea.highlight[key.toLowerCase()]}
-                    />
-                  ))}
-                </div>
-              </div>
-            </Tab>)}
+                  <div className="padding-top-sm">
+                    <h1>Highlight</h1>
+                    <div className="row">
+                      <ColorPicker
+                        className={colorClasses}
+                        label={label}
+                        onChange={c => this.handleHighlightChange(c, activeArea)}
+                        color={themeForArea.highlight ? themeForArea.highlight.default : undefined}
+                      />
+                    </div>
+                  </div>
+                </Tab>
+              ))}
             </Tabs>
             <div className="right pt-4">
               <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
