@@ -1,5 +1,7 @@
 import React from 'react';
 import SocialCards from '../components/social-cards';
+
+import Link from '../components/link';
 import Title from '../partials/title';
 import { DEFAULT_INSOMNIA_THEME } from './default-insomnia-theme';
 import ColorPicker from './color-picker';
@@ -99,6 +101,7 @@ export default class ThemeGenerator extends React.PureComponent {
               <h1>Theme Generator</h1>
             </header>
             <SvgPreview theme={theme} />
+            <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
 
           </section>
           <section className="container header--big run-in-container">
@@ -189,15 +192,36 @@ const SvgPreview = ({ theme }) => {
         <line x1="0" x2="25%" y1="10%" y2="10%" strokeWidth="1" stroke={theme.highlight.md} />
 
         {/* Colors */}
-        <rect x="30%" y="85%" width="5%" height="8%" fill={theme.foreground.default} />
-        <rect x="40%" y="85%" width="5%" height="8%" fill={theme.foreground.success} />
-        <rect x="50%" y="85%" width="5%" height="8%" fill={theme.foreground.notice} />
-        <rect x="60%" y="85%" width="5%" height="8%" fill={theme.foreground.warning} />
-        <rect x="70%" y="85%" width="5%" height="8%" fill={theme.foreground.danger} />
-        <rect x="80%" y="85%" width="5%" height="8%" fill={theme.foreground.surprise} />
-        <rect x="90%" y="85%" width="5%" height="8%" fill={theme.foreground.info} />
+        <rect x="30%" y="85%" width="5%" height="8%" fill={theme.background.default} />
+        <rect x="40%" y="85%" width="5%" height="8%" fill={theme.background.success} />
+        <rect x="50%" y="85%" width="5%" height="8%" fill={theme.background.notice} />
+        <rect x="60%" y="85%" width="5%" height="8%" fill={theme.background.warning} />
+        <rect x="70%" y="85%" width="5%" height="8%" fill={theme.background.danger} />
+        <rect x="80%" y="85%" width="5%" height="8%" fill={theme.background.surprise} />
+        <rect x="90%" y="85%" width="5%" height="8%" fill={theme.background.info} />
       </g>
     </svg>
   );
 };
 
+const InstallButton = ({ theme, name }) => {
+  const fullTheme = {
+    name: 'custom-theme',
+    displayName: 'Custom Name',
+    theme,
+  };
+  const main = `module.exports.themes = [${JSON.stringify(fullTheme, null, 2)}];`;
+
+  const url = 'insomnia://plugins/create?' + [
+    `name=${encodeURIComponent(name)}`,
+    `main=${encodeURIComponent(main)}`,
+    `version=${encodeURIComponent('1.0.0')}`,
+    `theme=${encodeURIComponent(fullTheme.name)}`
+  ].join('&');
+
+  return (
+    <Link to={url} className="button">
+      Install
+    </Link>
+  );
+};
