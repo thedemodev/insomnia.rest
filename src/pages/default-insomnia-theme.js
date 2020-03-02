@@ -12,23 +12,51 @@ export const DEFAULT_INSOMNIA_THEME = {
     default: '#eee',
   },
   highlight: {
-    default: '#eee',
+    default: 'rgba(130, 130, 130, 1)',
+    xxs: 'rgba(130, 130, 130, 0.05)',
+    xs: 'rgba(130, 130, 130, 0.1)',
+    sm: 'rgba(130, 130, 130, 0.25)',
+    md: 'rgba(130, 130, 130, 0.35)',
+    lg: 'rgba(130, 130, 130, 0.5)',
+    xl: 'rgba(130, 130, 130, 0.8)',
   },
   styles: {
-    transparentOverlay: {
+    dialog: {},
+    dialogFooter: {},
+    dialogHeader: {},
+    dropdown: {},
+    editor: {},
+    link: {},
+    overlay: {},
+    pane: {
       background: {
-        default: 'rgba(30, 30, 30, 0.8)',
+        default: '#282925',
+        success: '#7ecf2b',
+        notice: '#f0e137',
+        warning: '#ff9a1f',
+        danger: '#ff5631',
+        surprise: '#a896ff',
+        info: '#46c1e6',
       },
       foreground: {
-        default: '#ddd',
+        default: '#e0e0e0',
+      },
+      highlight: {
+        default: '#999',
       },
     },
-    dialog: {
+    paneHeader: {
+      foreground: {
+        default: '#666',
+      },
       background: {
         default: '#fff',
-      },
-      foreground: {
-        default: '#333',
+        success: '#75ba24',
+        notice: '#d8c84d',
+        warning: '#ec8702',
+        danger: '#e15251',
+        surprise: '#8776d5',
+        info: '#20aed9',
       },
     },
     sidebar: {
@@ -56,37 +84,9 @@ export const DEFAULT_INSOMNIA_THEME = {
         default: '#fff',
       },
     },
-    paneHeader: {
-      foreground: {
-        default: '#666',
-      },
-      background: {
-        default: '#fff',
-        success: '#75ba24',
-        notice: '#d8c84d',
-        warning: '#ec8702',
-        danger: '#e15251',
-        surprise: '#8776d5',
-        info: '#20aed9',
-      },
-    },
-    pane: {
-      background: {
-        default: '#282925',
-        success: '{{ styles.sidebar.background.success }}',
-        notice: '{{ styles.sidebar.background.notice }}',
-        warning: '{{ styles.sidebar.background.warning }}',
-        danger: '{{ styles.sidebar.background.danger }}',
-        surprise: '{{ styles.sidebar.background.surprise }}',
-        info: '{{ styles.sidebar.background.info }}',
-      },
-      foreground: {
-        default: '#e0e0e0',
-      },
-      highlight: {
-        default: '#999',
-      },
-    },
+    sidebarList: {},
+    tooltip: {},
+    transparentOverlay: {},
   },
 };
 

@@ -8,31 +8,31 @@ import ColorPicker from './color-picker';
 import { Tab, Tabs } from 'react-tabify';
 
 const themes = [
-  "Default",
-  "Success",
-  "Notice",
-  "Warning",
-  "Danger",
-  "Surprise",
-  "Info"
+  'Default',
+  'Success',
+  'Notice',
+  'Warning',
+  'Danger',
+  'Surprise',
+  'Info',
 ];
 
 const areas = [
-  "",
-  "dialog",
-  "dialogFooter",
-  "dialogHeader",
-  "dropdown",
-  "editor",
-  "link",
-  "overlay",
-  "pane",
-  "paneHeader",
-  "sidebar",
-  "sidebarHeader",
-  "sidebarList",
-  "tooltip",
-  "transparentOverlay"
+  '',
+  'dialog',
+  'dialogFooter',
+  'dialogHeader',
+  'dropdown',
+  'editor',
+  'link',
+  'overlay',
+  'pane',
+  'paneHeader',
+  'sidebar',
+  'sidebarHeader',
+  'sidebarList',
+  'tooltip',
+  'transparentOverlay',
 ];
 
 const highlights = [
@@ -42,13 +42,18 @@ const highlights = [
   { label: 'Medium', key: 'md' },
   { label: 'Large', key: 'lg' },
   { label: 'Huge', key: 'xl' },
-]
+];
 
 export default class ThemeGenerator extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { theme: DEFAULT_INSOMNIA_THEME, displayName: 'My custom theme', name: 'my-custom-theme', selectedArea: undefined };
+    this.state = {
+      theme: DEFAULT_INSOMNIA_THEME,
+      displayName: 'Custom Theme',
+      name: 'custom-theme',
+      selectedArea: undefined,
+    };
   }
 
   handleChange(color, areaName, layerName, themeName) {
@@ -64,10 +69,10 @@ export default class ThemeGenerator extends React.PureComponent {
             ...theme.styles[areaName],
             [layerName]: {
               ...theme.styles[areaName][layerName],
-              [themeName]: hex
-            }
-          }
-        }
+              [themeName]: hex,
+            },
+          },
+        },
       };
 
       this.setState({ theme: newTheme });
@@ -78,8 +83,8 @@ export default class ThemeGenerator extends React.PureComponent {
       ...theme,
       [layerName]: {
         ...theme[layerName],
-        [themeName]: hex
-      }
+        [themeName]: hex,
+      },
     };
 
     this.setState({ theme: newTheme });
@@ -87,7 +92,7 @@ export default class ThemeGenerator extends React.PureComponent {
 
   render() {
     const { selectedArea, theme } = this.state;
-    const colorClasses = "col-3";
+    const colorClasses = 'col-3';
     const themeForArea = selectedArea ? theme.styles[selectedArea] : theme;
 
     return (
@@ -96,13 +101,22 @@ export default class ThemeGenerator extends React.PureComponent {
           <Title>Theme Generator</Title>
           <SocialCards title="Insomnia" summary="Theme Generator" isBanner />
 
-          <section className="container header--big run-in-container">
-            <header className="run-in__header">
-              <h1>Theme Generator</h1>
-            </header>
-            <SvgPreview theme={theme} />
-            <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
-
+          <section className="container header--big run-in-container padding-bottom-lg padding-top">
+            <div className="row">
+              <div className="col-6">
+                <h1>Theme Generator</h1>
+                <p>Create a theme to use in Insomnia.</p>
+                <ul>
+                  <li>Install Insomnia 7.2.0+</li>
+                  <li>Select your favorite colors 🎨</li>
+                  <li>Click "Install"</li>
+                  <li>Enjoy your new theme!</li>
+                </ul>
+              </div>
+              <div className="col-6">
+                <SvgPreview theme={theme} />
+              </div>
+            </div>
           </section>
           <section className="container header--big run-in-container">
 
@@ -150,6 +164,9 @@ export default class ThemeGenerator extends React.PureComponent {
               </div>
             </Tab>)}
             </Tabs>
+            <div className="right pt-4">
+              <InstallButton name="insomnia-plugin-custom-theme" theme={this.state} />
+            </div>
           </section>
         </article>
       </React.Fragment>
@@ -158,30 +175,40 @@ export default class ThemeGenerator extends React.PureComponent {
 }
 
 const SvgPreview = ({ theme }) => {
+  console.log('HELLO', theme);
+  const sidebar = theme.styles.sidebar;
+  const sidebarH = theme.styles.sidebarHeader || {};
+  const pane = theme.styles.pane || {};
+  const paneH = theme.styles.paneHeader || {};
+
   return (
-    <svg width="100%" height="100%" viewBox="0 0 500 300">
+    <svg width="100%" height="100%" viewBox="0 0 500 300" style={{
+      borderRadius: 5,
+      overflow: 'hidden',
+      boxShadow: `0 0 30px -10px ${theme.background.default}`,
+    }}>
       <g>
         {/* Panes */}
-        <g className="theme--pane--sub">
-          <rect x="0" y="0" width="100%" height="100%" fill={theme.background.default} />
+        <g>
+          <rect x="0" y="0" width="100%" height="100%" fill={(pane.background || {}).default} />
           <rect
             x="25%"
             y="0"
             width="100%"
             height="10%"
-            fill={theme.background.default}
+            fill={(paneH.background || {}).default}
           />
         </g>
 
         {/* Sidebar */}
-        <g className="theme--sidebar--sub">
-          <rect x="0" y="0" width="25%" height="100%" fill={theme.background.default} />
+        <g>
+          <rect x="0" y="0" width="25%" height="100%" fill={(sidebar.background || {}).default} />
           <rect
             x="0"
             y="0"
             width="25%"
             height="10%"
-            fill={theme.background.default}
+            fill={(sidebarH.background || {}).default}
           />
         </g>
 
@@ -204,24 +231,19 @@ const SvgPreview = ({ theme }) => {
   );
 };
 
-const InstallButton = ({ theme, name }) => {
-  const fullTheme = {
-    name: 'custom-theme',
-    displayName: 'Custom Name',
-    theme,
-  };
-  const main = `module.exports.themes = [${JSON.stringify(fullTheme, null, 2)}];`;
+const InstallButton = ({ theme }) => {
+  const main = `module.exports.themes = [${JSON.stringify(theme, null, 2)}];`;
 
   const url = 'insomnia://plugins/create?' + [
-    `name=${encodeURIComponent(name)}`,
+    `name=${encodeURIComponent('insomnia-plugin-' + theme.name)}`,
     `main=${encodeURIComponent(main)}`,
     `version=${encodeURIComponent('1.0.0')}`,
-    `theme=${encodeURIComponent(fullTheme.name)}`
+    `theme=${encodeURIComponent(theme.name)}`,
   ].join('&');
 
   return (
-    <Link to={url} className="button">
-      Install
+    <Link to={url} className="button button--big">
+      Install Theme
     </Link>
   );
 };
