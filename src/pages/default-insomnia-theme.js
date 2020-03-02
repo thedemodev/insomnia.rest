@@ -89,3 +89,4 @@ export const DEFAULT_INSOMNIA_THEME = {
     },
   },
 };
+

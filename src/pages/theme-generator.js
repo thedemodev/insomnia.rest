@@ -1,8 +1,8 @@
 import React from 'react';
 import SocialCards from '../components/social-cards';
 import Title from '../partials/title';
-import { BlockPicker } from 'react-color';
 import { DEFAULT_INSOMNIA_THEME } from './default-insomnia-theme';
+import ColorPicker from './color-picker';
 
 export default class ThemeGenerator extends React.PureComponent {
   constructor(props) {
@@ -28,7 +28,6 @@ export default class ThemeGenerator extends React.PureComponent {
     //   this.state[first];
     // }
 
-    const state = { ...this.state };
     this.setState(newState);
   }
 
@@ -47,10 +46,14 @@ export default class ThemeGenerator extends React.PureComponent {
 
           </section>
           <section className="container header--big run-in-container">
-            <header className="run-in__header">
-              Colors
-            </header>
-            <BlockPicker hide onChange={c => this.handleChange(c, undefined, 'foreground', 'default')} color={this.state.foreground.default} />
+            <h1>Foreground</h1>
+            <ColorPicker label="Default" onChange={c => this.handleChange(c, undefined, 'foreground', 'default')} color={this.state.foreground.default} />
+
+            <h1>Background</h1>
+            <ColorPicker label="Default" onChange={c => this.handleChange(c, undefined, 'background', 'default')} color={this.state.background.default} />
+
+            <h1>Highlight</h1>
+            <ColorPicker label="Md" onChange={c => this.handleChange(c, undefined, 'highlight', 'md')} color={this.state.highlight.default} />
           </section>
 
         </article>
