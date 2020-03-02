@@ -143,15 +143,29 @@ export default class ThemeGenerator extends React.PureComponent {
             <Tabs activeKey={activeKey} onSelect={this.handleTabSelect}>
               {areas.map(({ label, key }) => (
                 <Tab label={label} key={key}>
-                  <div className="padding-top-sm">
-                    <h1>Foreground</h1>
-                    <div className="row">
-                      <ColorPicker
-                        className={colorClasses}
-                        label="Text color"
-                        onChange={c => this.handleChange(c, activeArea, 'foreground', 'default')}
-                        color={themeForArea.foreground ? themeForArea.foreground.default : undefined}
-                      />
+                  <div className="padding-top-sm row">
+
+                    <div className="col-6 ml-0">
+                      <h1>Foreground</h1>
+                      <div className="row">
+                        <ColorPicker
+                          label="Text"
+                          className={colorClasses}
+                          onChange={c => this.handleChange(c, activeArea, 'foreground', 'default')}
+                          color={themeForArea.foreground ? themeForArea.foreground.default : undefined}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6 ml-0">
+                      <h1>Highlight</h1>
+                      <div className="row">
+                        <ColorPicker
+                          label="Base"
+                          className={colorClasses}
+                          onChange={c => this.handleHighlightChange(c, activeArea)}
+                          color={themeForArea.highlight ? themeForArea.highlight.default : undefined}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -167,18 +181,6 @@ export default class ThemeGenerator extends React.PureComponent {
                           color={themeForArea.background ? themeForArea.background[t.toLowerCase()] : undefined}
                         />
                       ))}
-                    </div>
-                  </div>
-
-                  <div className="padding-top-sm">
-                    <h1>Highlight</h1>
-                    <div className="row">
-                      <ColorPicker
-                        className={colorClasses}
-                        label={label}
-                        onChange={c => this.handleHighlightChange(c, activeArea)}
-                        color={themeForArea.highlight ? themeForArea.highlight.default : undefined}
-                      />
                     </div>
                   </div>
                 </Tab>
